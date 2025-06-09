@@ -132,4 +132,250 @@ func init() {
 	})
 	githubCmd.AddCommand(copilotCmd)
 	rootCmd.AddCommand(githubCmd)
+
+	// explain
+	explainCmd := &cobra.Command{
+		Use:   "explain [file_path]",
+		Short: "Explain the code in the given file",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("Explaining code in file: %s (not implemented in Go yet).\n", args[0])
+		},
+	}
+	rootCmd.AddCommand(explainCmd)
+
+	// extract
+	extractCmd := &cobra.Command{
+		Use:   "extract",
+		Short: "Extract code blocks from file or string",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Extracting code blocks (not implemented in Go yet).")
+		},
+	}
+	extractCmd.Flags().String("file", "", "Path to the file to process")
+	extractCmd.Flags().String("string", "", "Input string containing code blocks")
+	rootCmd.AddCommand(extractCmd)
+
+	// format
+	formatCmd := &cobra.Command{
+		Use:   "format",
+		Short: "Format code blocks for readability",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Formatting code blocks (not implemented in Go yet).")
+		},
+	}
+	formatCmd.Flags().String("file", "", "Path to the file to process")
+	formatCmd.Flags().String("string", "", "Input string containing code blocks")
+	rootCmd.AddCommand(formatCmd)
+
+	// command
+	commandCmd := &cobra.Command{
+		Use:   "command [user_command]",
+		Short: "Process a command request",
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("Processing command: %s (not implemented in Go yet).\n", strings.Join(args, " "))
+		},
+	}
+	rootCmd.AddCommand(commandCmd)
+
+	// edit
+	editCmd := &cobra.Command{
+		Use:   "edit [paths...] --user_prompt PROMPT",
+		Short: "Edit code in specified files or folders",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Editing code (not implemented in Go yet).")
+		},
+	}
+	editCmd.Flags().StringSlice("user_prompt", nil, "User prompt for editing")
+	editCmd.Flags().Bool("allow-ignore", false, "Allow explicitly passed directories to be processed even if .gitignore ignores them")
+	rootCmd.AddCommand(editCmd)
+
+	// suggestion
+	suggestionCmd := &cobra.Command{
+		Use:   "suggestion",
+		Short: "Short suggestions from code model at lightning speed",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Providing suggestion (not implemented in Go yet).")
+		},
+	}
+	suggestionCmd.Flags().String("file", "", "File to read code from")
+	suggestionCmd.Flags().Int("line", 0, "Line number to use for suggestion")
+	suggestionCmd.Flags().StringSlice("string", nil, "User-provided code snippet for suggestion")
+	suggestionCmd.Flags().BoolP("entire", "E", false, "Send entire file content for suggestion")
+	rootCmd.AddCommand(suggestionCmd)
+
+	// secret-ai
+	secretAICmd := &cobra.Command{
+		Use:   "secret-ai",
+		Short: "Secret AI SDK integration commands",
+	}
+	secretAICmd.AddCommand(&cobra.Command{
+		Use:   "list-models",
+		Short: "List available Secret AI models",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Listing Secret AI models (not implemented in Go yet).")
+		},
+	})
+	secretAICmd.AddCommand(&cobra.Command{
+		Use:   "test-connection",
+		Short: "Test Secret AI connection",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Testing Secret AI connection (not implemented in Go yet).")
+		},
+	})
+	secretAICmd.AddCommand(&cobra.Command{
+		Use:   "chat [message]",
+		Short: "Chat with Secret AI",
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("Chatting with Secret AI: %s (not implemented in Go yet).\n", strings.Join(args, " "))
+		},
+	})
+	rootCmd.AddCommand(secretAICmd)
+
+	// web3
+	web3Cmd := &cobra.Command{
+		Use:   "web3",
+		Short: "Web3 development commands",
+	}
+	web3Cmd.AddCommand(&cobra.Command{
+		Use:   "scaffold [project_name]",
+		Short: "Scaffold a new web3 project",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Scaffolding web3 project (not implemented in Go yet).")
+		},
+	})
+	web3Cmd.AddCommand(&cobra.Command{
+		Use:   "analyze-contract [contract_file]",
+		Short: "Analyze a smart contract",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Analyzing smart contract (not implemented in Go yet).")
+		},
+	})
+	web3Cmd.AddCommand(&cobra.Command{
+		Use:   "estimate-gas [contract_file]",
+		Short: "Estimate gas costs for a smart contract",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Estimating gas costs (not implemented in Go yet).")
+		},
+	})
+	web3Cmd.AddCommand(&cobra.Command{
+		Use:   "generate-tests [contract_file]",
+		Short: "Generate tests for a smart contract",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Generating tests (not implemented in Go yet).")
+		},
+	})
+	web3Cmd.AddCommand(&cobra.Command{
+		Use:   "check-env",
+		Short: "Check web3 development environment",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Checking web3 environment (not implemented in Go yet).")
+		},
+	})
+	web3Cmd.AddCommand(&cobra.Command{
+		Use:   "install-deps",
+		Short: "Install web3 dependencies",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Installing web3 dependencies (not implemented in Go yet).")
+		},
+	})
+	rootCmd.AddCommand(web3Cmd)
+
+	// zerepy
+	zerepyCmd := &cobra.Command{
+		Use:   "zerepy",
+		Short: "ZerePy integration commands",
+	}
+	zerepyCmd.AddCommand(&cobra.Command{
+		Use:   "status",
+		Short: "Check ZerePy server status",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Checking ZerePy server status (not implemented in Go yet).")
+		},
+	})
+	zerepyCmd.AddCommand(&cobra.Command{
+		Use:   "list-agents",
+		Short: "List available ZerePy agents",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Listing ZerePy agents (not implemented in Go yet).")
+		},
+	})
+	zerepyCmd.AddCommand(&cobra.Command{
+		Use:   "load-agent [agent_name]",
+		Short: "Load a ZerePy agent",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Loading ZerePy agent (not implemented in Go yet).")
+		},
+	})
+	zerepyCmd.AddCommand(&cobra.Command{
+		Use:   "action [connection] [action]",
+		Short: "Execute a ZerePy action",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Executing ZerePy action (not implemented in Go yet).")
+		},
+	})
+	zerepyCmd.AddCommand(&cobra.Command{
+		Use:   "chat [message]",
+		Short: "Chat with a ZerePy agent",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Chatting with ZerePy agent (not implemented in Go yet).")
+		},
+	})
+	rootCmd.AddCommand(zerepyCmd)
+
+	// solana
+	solanaCmd := &cobra.Command{
+		Use:   "solana",
+		Short: "Solana blockchain commands",
+	}
+	solanaCmd.AddCommand(&cobra.Command{
+		Use:   "status",
+		Short: "Check Solana Agent status",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Checking Solana Agent status (not implemented in Go yet).")
+		},
+	})
+	solanaCmd.AddCommand(&cobra.Command{
+		Use:   "balance",
+		Short: "Get wallet balance",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Getting wallet balance (not implemented in Go yet).")
+		},
+	})
+	solanaCmd.AddCommand(&cobra.Command{
+		Use:   "transfer [destination] [amount]",
+		Short: "Transfer SOL to an address",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Transferring SOL (not implemented in Go yet).")
+		},
+	})
+	mcpCmd := &cobra.Command{
+		Use:   "mcp",
+		Short: "Solana MCP commands",
+	}
+	mcpCmd.AddCommand(&cobra.Command{
+		Use:   "interact [program_id] [action_type]",
+		Short: "Interact with an MCP",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Interacting with MCP (not implemented in Go yet).")
+		},
+	})
+	mcpCmd.AddCommand(&cobra.Command{
+		Use:   "state [program_id] [account_address]",
+		Short: "Get state from an MCP",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Getting MCP state (not implemented in Go yet).")
+		},
+	})
+	mcpCmd.AddCommand(&cobra.Command{
+		Use:   "init-account [program_id] [space]",
+		Short: "Initialize a new MCP account",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Initializing MCP account (not implemented in Go yet).")
+		},
+	})
+	solanaCmd.AddCommand(mcpCmd)
+	rootCmd.AddCommand(solanaCmd)
 }
