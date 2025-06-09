@@ -1,6 +1,8 @@
 package engine
 
 import (
+	"fmt"
+
 	"github.com/codeforge-ide/codeforgeai.go/config"
 	"github.com/codeforge-ide/codeforgeai.go/models"
 )
@@ -18,6 +20,25 @@ func NewEngine(cfg *config.Config) *Engine {
 		// GeneralModel: ...,
 		// CodeModel: ...,
 	}
+}
+
+func (e *Engine) RunAnalysis() {
+	fmt.Println("Engine: Run analysis (not implemented in Go yet).")
+}
+
+func (e *Engine) ProcessPrompt(prompt string) string {
+	fmt.Println("Engine: Process prompt (not implemented in Go yet).")
+	return ""
+}
+
+func (e *Engine) ExplainCode(filePath string) string {
+	fmt.Println("Engine: Explain code (not implemented in Go yet).")
+	return ""
+}
+
+func (e *Engine) ProcessCommitMessage() string {
+	fmt.Println("Engine: Process commit message (not implemented in Go yet).")
+	return ""
 }
 
 // TODO: Implement methods: RunAnalysis, ProcessPrompt, ExplainCode, GenerateCommitMessage, etc.
