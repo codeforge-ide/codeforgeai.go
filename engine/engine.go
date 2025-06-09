@@ -8,7 +8,7 @@ import (
 )
 
 type Engine struct {
-	Config      *config.Config
+	Config       *config.Config
 	GeneralModel models.Model
 	CodeModel    models.Model
 }
