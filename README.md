@@ -19,3 +19,5 @@ A modular, pluggable AI-powered code analysis and automation tool, rewritten in 
 ## Migration
 
 This Go project is a line-for-line functional rewrite of the original Python `codeforgeai`, with improved modularity and extensibility.
+
+contributions are always welcome!
