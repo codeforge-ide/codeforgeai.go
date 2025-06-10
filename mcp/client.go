@@ -55,8 +55,8 @@ func (c *MCPClient) simulateToolCall(toolName string, args map[string]interface{
 	case "price":
 		return &MCPResponse{
 			Raw: map[string]interface{}{
-				"price_xrd":   0.083,
-				"price_usd":   0.083,
+				"price_xrd":  0.083,
+				"price_usd":  0.083,
 				"change_24h": 2.5,
 				"change_7d":  -1.2,
 			},
@@ -65,8 +65,8 @@ func (c *MCPClient) simulateToolCall(toolName string, args map[string]interface{
 	case "apy":
 		return &MCPResponse{
 			Raw: map[string]interface{}{
-				"staking_apy":         12.5,
-				"lp_apy":              15.8,
+				"staking_apy":       12.5,
+				"lp_apy":            15.8,
 				"validator_rewards": 3.2,
 			},
 			Text: "ASTRL Staking APY: 12.5% | LP APY: 15.8% | Validator Rewards: 3.2%",

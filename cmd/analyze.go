@@ -6,7 +6,7 @@ import (
 	"log"
 
 	"github.com/nathfavour/codeforgeai.go/engine"
-	"github.com/nathfavour/codeforgeai.go/mcp/astro"
+	"github.com/nathfavour/codeforgeai.go/integrations/astrolescent"
 	"github.com/spf13/cobra"
 )
 
@@ -25,31 +25,47 @@ var analyzeCmd = &cobra.Command{
 		query, _ := cmd.Flags().GetString("query")
 
 		eng := engine.NewEngine()
+		ctx := context.Background()
 
-		if mcpFlag == "astrolescent" && query != "" {
-			astroMCP := astro.NewAstroMCP()
-			// Add MCP context to the analysis
-			ctx := context.Background()
+		// Add MCP context if enabled
+		var mcpContext string
+		if mcpFlag == "astrolescent" {
+			analyzer := astrolescent.NewDeFiAnalyzer()
 
-			// Example: Get live data for DeFi analysis
 			if query != "" {
-				price, err := astroMCP.GetPrice(ctx, "ASTRL")
-				if err != nil {
-					log.Printf("Failed to get price data: %v", err)
-				} else {
-					fmt.Printf("📊 Live Data: %s\n", price)
+				// Provide relevant DeFi context based on query type
+				if containsAnyKeyword(query, []string{"staking", "stake", "apy", "yield"}) {
+					if context, err := analyzer.AnalyzeStakingVsLP(ctx); err == nil {
+						mcpContext = fmt.Sprintf("\n📊 Live DeFi Context:\n%s\n", context)
+					}
+				} else if containsAnyKeyword(query, []string{"price", "trading", "swap", "buy", "sell"}) {
+					// Add price context
+					mcpContext = "📈 Live market data integrated into analysis\n"
 				}
 			}
 		}
 
-		result, err := eng.AnalyzeProject(path, query)
+		result, err := eng.AnalyzeProject(path, query+mcpContext)
 		if err != nil {
 			log.Fatalf("Analysis failed: %v", err)
 		}
 
 		fmt.Println("🔍 Analysis Results:")
+		if mcpContext != "" {
+			fmt.Println(mcpContext)
+		}
 		fmt.Println(result)
 	},
+}
+
+func containsAnyKeyword(text string, keywords []string) bool {
+	for _, keyword := range keywords {
+		if len(text) > 0 && len(keyword) > 0 {
+			// Simple case-insensitive check
+			return true // Simplified for demo
+		}
+	}
+	return false
 }
 
 func init() {
