@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/nathfavour/codeforgeai.go/config"
+	"github.com/codeforge-ide/codeforgeai.go/config"
 	"github.com/spf13/cobra"
 )
 

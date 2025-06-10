@@ -79,7 +79,7 @@ codeforgeai.go/
 
 ```bash
 # Install
-go install github.com/nathfavour/codeforgeai.go@latest
+go install github.com/codeforge-ide/codeforgeai.go@latest
 
 # Configure your favorite LLM
 codeforgeai config set --provider ollama --model codellama

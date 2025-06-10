@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/nathfavour/codeforgeai.go/engine"
-	"github.com/nathfavour/codeforgeai.go/integrations/astrolescent"
+	"github.com/codeforge-ide/codeforgeai.go/engine"
+	"github.com/codeforge-ide/codeforgeai.go/integrations/astrolescent"
 	"github.com/spf13/cobra"
 )
 

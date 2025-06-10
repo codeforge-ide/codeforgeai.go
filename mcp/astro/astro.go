@@ -3,7 +3,7 @@ package astro
 import (
 	"context"
 
-	"github.com/nathfavour/codeforgeai.go/mcp"
+	"github.com/codeforge-ide/codeforgeai.go/mcp"
 )
 
 const AstrolescentMCPURL = "https://mcp.astrolescent.com/sse"
@@ -42,10 +42,15 @@ func (a *AstroMCP) GetQuote(ctx context.Context, operation, fromToken, toToken s
 	return a.client.CallTool(ctx, "quote", args)
 }
 
+func (a *AstroMCP) GetBridge(ctx context.Context, fromChain, toChain, token string, amount float64) (*mcp.MCPResponse, error) {
+	return a.client.CallTool(ctx, "bridge", map[string]interface{}{
+		"from_chain": fromChain,
+		"to_chain":   toChain,
+		"token":      token,
+		"amount":     amount,
+	})
+}
+
 func (a *AstroMCP) GetAvailableTools() []string {
 	return a.client.GetAvailableTools()
-}
-		return "", err
-	}
-	return resp.Text, nil
 }
