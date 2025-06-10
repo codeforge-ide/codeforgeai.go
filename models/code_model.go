@@ -12,6 +12,7 @@ type CodeModel struct {
 }
 
 // NewCodeModel creates a CodeModel with the given model name.
+// In future, this can be extended to select other backends.
 func NewCodeModel(modelName string) *CodeModel {
 	return &CodeModel{
 		ollama: ollama.NewOllamaModel(modelName, "", 60*time.Second),

@@ -12,6 +12,7 @@ type GeneralModel struct {
 }
 
 // NewGeneralModel creates a GeneralModel with the given model name.
+// In future, this can be extended to select other backends.
 func NewGeneralModel(modelName string) *GeneralModel {
 	return &GeneralModel{
 		ollama: ollama.NewOllamaModel(modelName, "", 60*time.Second),

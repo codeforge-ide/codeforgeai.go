@@ -5,6 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/codeforge-ide/codeforgeai.go/config"
+	"github.com/codeforge-ide/codeforgeai.go/engine"
 	"github.com/codeforge-ide/codeforgeai.go/integrations/githubmodels" // Import the GitHub Models client package
 	"github.com/spf13/cobra"
 )
@@ -42,11 +44,9 @@ func init() {
 		Use:   "analyze",
 		Short: "Analyze current working directory",
 		Run: func(cmd *cobra.Command, args []string) {
-			if loop {
-				fmt.Println("Running analysis loop (not implemented in Go yet).")
-			} else {
-				fmt.Println("Analyzing current working directory (not implemented in Go yet).")
-			}
+			cfg, _ := config.EnsureConfigPrompts("")
+			eng := engine.NewEngine(&cfg)
+			eng.RunAnalysis()
 		},
 	}
 	analyzeCmd.Flags().BoolVar(&loop, "loop", false, "Enable adaptive feedback loop")
@@ -58,8 +58,10 @@ func init() {
 		Short: "Process a user prompt",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("Processing prompt: %s\n", strings.Join(args, " "))
-			fmt.Println("(Prompt processing not implemented in Go yet.)")
+			cfg, _ := config.EnsureConfigPrompts("")
+			eng := engine.NewEngine(&cfg)
+			resp := eng.ProcessPrompt(strings.Join(args, " "))
+			fmt.Println(resp)
 		},
 	}
 	rootCmd.AddCommand(promptCmd)
@@ -69,7 +71,9 @@ func init() {
 		Use:   "config",
 		Short: "Run configuration checkup",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Configuration checkup complete. (Not implemented in Go yet.)")
+			cfg, _ := config.EnsureConfigPrompts("")
+			fmt.Println("Configuration checkup complete. Current configuration:")
+			config.PrintConfig(cfg)
 		},
 	}
 	rootCmd.AddCommand(configCmd)
@@ -89,7 +93,12 @@ func init() {
 		Use:   "commit-message",
 		Short: "Generate commit message with code changes and gitmoji",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Generating commit message (not implemented in Go yet).")
+			cfg, _ := config.EnsureConfigPrompts("")
+			eng := engine.NewEngine(&cfg)
+			// TODO: Get diff from git or file
+			diff := "example diff"
+			resp := eng.ProcessCommitMessage(diff)
+			fmt.Println(resp)
 		},
 	}
 	rootCmd.AddCommand(commitMsgCmd)
