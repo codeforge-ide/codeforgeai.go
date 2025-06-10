@@ -3,6 +3,7 @@ package directory
 import (
 	"bufio"
 	"encoding/json"
+	"fmt"
 	"os"
 	"path/filepath"
 	"strings"
@@ -110,9 +111,65 @@ func AnalyzeDirectory() {
 	println(string(b))
 }
 
+// SerializeTree converts a tree to JSON string.
+func SerializeTree(tree *Node) (string, error) {
+	b, err := json.MarshalIndent(tree, "", "  ")
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
+}
+
+// SaveAnalysisResult saves the analysis result to .codeforge.json.
+func SaveAnalysisResult(root, result string) error {
+	filePath := filepath.Join(root, ".codeforge.json")
+	return os.WriteFile(filePath, []byte(result), 0644)
+}
+
+// GetUsefulFiles extracts useful file paths from a tree.
+func GetUsefulFiles(node *Node) []string {
+	var files []string
+	if node == nil {
+		return files
+	}
+
+	if node.Type == "file" && node.Classification == "useful" {
+		files = append(files, node.Path)
+	}
+
+	for _, child := range node.Children {
+		files = append(files, GetUsefulFiles(child)...)
+	}
+	return files
+}
+
 // StripDirectory prints the tree after removing gitignored files.
 func StripDirectory() {
-	AnalyzeDirectory()
+	root, _ := os.Getwd()
+	tree, err := BuildTree(root)
+	if err != nil {
+		println("Error:", err.Error())
+		return
+	}
+
+	// Print as formatted tree structure
+	printTree(tree, "")
+}
+
+func printTree(node *Node, prefix string) {
+	if node == nil {
+		return
+	}
+
+	fmt.Printf("%s%s (%s)\n", prefix, node.Name, node.Type)
+
+	for i, child := range node.Children {
+		childPrefix := prefix + "  "
+		if i == len(node.Children)-1 {
+			childPrefix = prefix + "  "
+		}
+		printTree(child, childPrefix)
+	}
 }
 
 // ReadFileContent reads a file and returns its content as string.

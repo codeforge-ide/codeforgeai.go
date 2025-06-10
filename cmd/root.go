@@ -96,8 +96,18 @@ func init() {
 		Run: func(cmd *cobra.Command, args []string) {
 			cfg, _ := config.EnsureConfigPrompts("")
 			eng := engine.NewEngine(&cfg)
-			// TODO: Get diff from git or file
-			diff := "example diff"
+
+			// Get git diff
+			diff, err := eng.GetGitDiff()
+			if err != nil {
+				fmt.Println("Error getting git diff:", err)
+				return
+			}
+			if strings.TrimSpace(diff) == "" {
+				fmt.Println("No changes detected in git")
+				return
+			}
+
 			resp := eng.ProcessCommitMessage(diff)
 			fmt.Println(resp)
 		},
@@ -305,7 +315,28 @@ func init() {
 		Use:   "edit [paths...] --user_prompt PROMPT",
 		Short: "Edit code in specified files or folders",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Editing code (not implemented in Go yet).")
+			userPrompts, _ := cmd.Flags().GetStringSlice("user_prompt")
+			allowIgnore, _ := cmd.Flags().GetBool("allow-ignore")
+
+			if len(userPrompts) == 0 {
+				fmt.Println("Error: --user_prompt is required")
+				return
+			}
+
+			userPrompt := strings.Join(userPrompts, " ")
+			paths := args
+			if len(paths) == 0 {
+				paths = []string{"."} // Default to current directory
+			}
+
+			cfg, _ := config.EnsureConfigPrompts("")
+			eng := engine.NewEngine(&cfg)
+			err := eng.EditFiles(paths, userPrompt, allowIgnore)
+			if err != nil {
+				fmt.Println("Error editing files:", err)
+			} else {
+				fmt.Println("Edit complete. Check .codeforgedit files for results.")
+			}
 		},
 	}
 	editCmd.Flags().StringSlice("user_prompt", nil, "User prompt for editing")
@@ -317,7 +348,15 @@ func init() {
 		Use:   "suggestion",
 		Short: "Short suggestions from code model at lightning speed",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Providing suggestion (not implemented in Go yet).")
+			filePath, _ := cmd.Flags().GetString("file")
+			line, _ := cmd.Flags().GetInt("line")
+			snippets, _ := cmd.Flags().GetStringSlice("string")
+			entire, _ := cmd.Flags().GetBool("entire")
+
+			cfg, _ := config.EnsureConfigPrompts("")
+			eng := engine.NewEngine(&cfg)
+			resp := eng.ProvideSuggestion(filePath, line, snippets, entire)
+			fmt.Println(resp)
 		},
 	}
 	suggestionCmd.Flags().String("file", "", "File to read code from")

@@ -26,6 +26,9 @@ type Config struct {
 	SpecificFileClassification    string `json:"specific_file_classification"`
 	ImproveCodePrompt             string `json:"improve_code_prompt"`
 	ExplainCodePrompt             string `json:"explain_code_prompt"`
+	SuggestionPrompt              string `json:"suggestion_prompt"`
+	ExtractCodeBlocksPrompt       string `json:"extract_code_blocks_prompt"`
+	FormatCodePrompt              string `json:"format_code_prompt"`
 }
 
 func DefaultConfig() Config {
@@ -48,6 +51,9 @@ func DefaultConfig() Config {
 		SpecificFileClassification:    "taking the path and content of this file and classify it into either only user code file or project code file or source control file",
 		ImproveCodePrompt:             "given this block of code, improve the code generally and return nothing but the improved code:",
 		ExplainCodePrompt:             "explain the following code in a clear and concise manner",
+		SuggestionPrompt:              "provide a helpful code suggestion for the following code context:",
+		ExtractCodeBlocksPrompt:       "extract all code blocks from the following text and return them in a structured format:",
+		FormatCodePrompt:              "format the following code for better readability while preserving functionality:",
 	}
 }
 
@@ -115,6 +121,18 @@ func EnsureConfigPrompts(path string) (Config, error) {
 	}
 	if cfg.ExplainCodePrompt == "" {
 		cfg.ExplainCodePrompt = def.ExplainCodePrompt
+		changed = true
+	}
+	if cfg.SuggestionPrompt == "" {
+		cfg.SuggestionPrompt = def.SuggestionPrompt
+		changed = true
+	}
+	if cfg.ExtractCodeBlocksPrompt == "" {
+		cfg.ExtractCodeBlocksPrompt = def.ExtractCodeBlocksPrompt
+		changed = true
+	}
+	if cfg.FormatCodePrompt == "" {
+		cfg.FormatCodePrompt = def.FormatCodePrompt
 		changed = true
 	}
 	if changed {
