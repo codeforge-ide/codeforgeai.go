@@ -5,8 +5,8 @@ import (
 	"os"
 	"strings"
 
+	"github.com/codeforge-ide/codeforgeai.go/integrations/githubmodels" // Import the GitHub Models client package
 	"github.com/spf13/cobra"
-	"github.com/yourusername/githubmodels" // Import the GitHub Models client package
 )
 
 var (
