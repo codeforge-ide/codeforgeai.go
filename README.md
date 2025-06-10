@@ -1,6 +1,6 @@
 # codeforgeai.go
 
-A modular, pluggable AI-powered code analysis and automation tool, rewritten in Go.
+A modular, pluggable AI/MCP powered code analysis and automation tool, rewritten in Go.
 
 - Functionality matches the original Python `codeforgeai` project.
 - Modular architecture: core engine, config, models, integrations, CLI, and utilities.
