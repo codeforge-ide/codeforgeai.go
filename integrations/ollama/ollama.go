@@ -10,7 +10,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/codeforge-ide/codeforgeai.go/models"
+	"github.com/codeforge-ide/codeforgeai.go/modeliface"
 )
 
 // Ollama API endpoint (default)
@@ -100,4 +100,4 @@ func (o *OllamaModel) SendRequest(prompt string, config interface{}) (string, er
 	return result, nil
 }
 
-var _ models.Model = (*OllamaModel)(nil)
+var _ modeliface.Model = (*OllamaModel)(nil)
