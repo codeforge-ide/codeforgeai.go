@@ -7,7 +7,8 @@ import (
 
 	"github.com/codeforge-ide/codeforgeai.go/config"
 	"github.com/codeforge-ide/codeforgeai.go/engine"
-	"github.com/codeforge-ide/codeforgeai.go/integrations/githubmodels" // Import the GitHub Models client package
+	"github.com/codeforge-ide/codeforgeai.go/directory"
+	"github.com/codeforge-ide/codeforgeai.go/integrations/githubmodels"
 	"github.com/spf13/cobra"
 )
 
@@ -83,7 +84,7 @@ func init() {
 		Use:   "strip",
 		Short: "Print tree structure after removing gitignored files",
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Printing tree structure (not implemented in Go yet).")
+			directory.StripDirectory()
 		},
 	}
 	rootCmd.AddCommand(stripCmd)
@@ -256,7 +257,10 @@ func init() {
 		Short: "Explain the code in the given file",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("Explaining code in file: %s (not implemented in Go yet).\n", args[0])
+			cfg, _ := config.EnsureConfigPrompts("")
+			eng := engine.NewEngine(&cfg)
+			resp := eng.ExplainCode(args[0])
+			fmt.Println(resp)
 		},
 	}
 	rootCmd.AddCommand(explainCmd)

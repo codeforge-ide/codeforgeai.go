@@ -8,54 +8,51 @@ import (
 	"github.com/codeforge-ide/codeforgeai.go/models"
 )
 
-// Engine is the central orchestrator.
-type Engine struct {
-	Config       *config.Config
-	GeneralModel models.Model
-	CodeModel    models.Model
+// Engine orchestrates operations using fresh config and models.
+type Engine struct{}
+
+// NewEngine is kept for compatibility but does nothing now.
+func NewEngine(cfg *config.Config) *Engine {
+	return &Engine{}
 }
 
-// NewEngine loads config and instantiates models.
-func NewEngine(cfg *config.Config) *Engine {
-	// Model selection is pluggable and based on config.
-	var generalModel models.Model
-	var codeModel models.Model
+// loadFreshConfig loads the latest config from disk.
+func loadFreshConfig() (config.Config, error) {
+	return config.EnsureConfigPrompts("")
+}
 
-	// General model selection
-	switch cfg.GeneralModel {
-	case "ollama", "gemma3:1b", "qwen2.5-coder:1.5b":
-		generalModel = models.NewGeneralModel(cfg.GeneralModel)
-	// Add more cases for other integrations (e.g., openai, copilot) as needed.
-	default:
-		generalModel = models.NewGeneralModel(cfg.GeneralModel)
-	}
+// getGeneralModel instantiates the general model based on config.
+func getGeneralModel(cfg *config.Config) models.Model {
+	return models.NewGeneralModel(cfg.GeneralModel)
+}
 
-	// Code model selection
-	switch cfg.CodeModel {
-	case "ollama", "qwen2.5-coder:1.5b":
-		codeModel = models.NewCodeModel(cfg.CodeModel)
-	// Add more cases for other integrations as needed.
-	default:
-		codeModel = models.NewCodeModel(cfg.CodeModel)
-	}
-
-	return &Engine{
-		Config:       cfg,
-		GeneralModel: generalModel,
-		CodeModel:    codeModel,
-	}
+// getCodeModel instantiates the code model based on config.
+func getCodeModel(cfg *config.Config) models.Model {
+	return models.NewCodeModel(cfg.CodeModel)
 }
 
 // RunAnalysis analyzes the current directory.
 func (e *Engine) RunAnalysis() {
-	// TODO: Implement directory analysis and classification.
+	cfg, err := loadFreshConfig()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error loading config:", err)
+		return
+	}
+	// TODO: Call directory analysis utilities and classification here.
 	fmt.Println("Engine: Run analysis (not implemented yet).")
+	_ = cfg // placeholder to avoid unused warning
 }
 
 // ProcessPrompt finetunes and processes a user prompt.
 func (e *Engine) ProcessPrompt(prompt string) string {
-	resp, err := e.GeneralModel.SendRequest(prompt, map[string]interface{}{
-		"general_model": e.Config.GeneralModel,
+	cfg, err := loadFreshConfig()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error loading config:", err)
+		return ""
+	}
+	model := getGeneralModel(&cfg)
+	resp, err := model.SendRequest(prompt, map[string]interface{}{
+		"general_model": cfg.GeneralModel,
 	})
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error processing prompt:", err)
@@ -66,16 +63,28 @@ func (e *Engine) ProcessPrompt(prompt string) string {
 
 // ExplainCode explains code in a file.
 func (e *Engine) ExplainCode(filePath string) string {
+	cfg, err := loadFreshConfig()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error loading config:", err)
+		return ""
+	}
+	model := getCodeModel(&cfg)
 	// TODO: Read file content, send to code model with explain prompt.
 	fmt.Println("Engine: Explain code (not implemented yet).")
+	_ = model
 	return ""
 }
 
 // ProcessCommitMessage generates a commit message.
 func (e *Engine) ProcessCommitMessage(diff string) string {
-	// Use code model to generate commit message.
-	resp, err := e.CodeModel.SendRequest(e.Config.CommitMessagePrompt+"\n"+diff, map[string]interface{}{
-		"code_model": e.Config.CodeModel,
+	cfg, err := loadFreshConfig()
+	if err != nil {
+		fmt.Fprintln(os.Stderr, "Error loading config:", err)
+		return ""
+	}
+	model := getCodeModel(&cfg)
+	resp, err := model.SendRequest(cfg.CommitMessagePrompt+"\n"+diff, map[string]interface{}{
+		"code_model": cfg.CodeModel,
 	})
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error generating commit message:", err)
