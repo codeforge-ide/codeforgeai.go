@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/codeforge-ide/codeforgeai.go/config"
+	"github.com/codeforge-ide/codeforgeai.go/modeliface"
 	"github.com/codeforge-ide/codeforgeai.go/models"
 )
 
@@ -22,12 +23,12 @@ func loadFreshConfig() (config.Config, error) {
 }
 
 // getGeneralModel instantiates the general model based on config.
-func getGeneralModel(cfg *config.Config) models.Model {
+func getGeneralModel(cfg *config.Config) modeliface.Model {
 	return models.NewGeneralModel(cfg.GeneralModel)
 }
 
 // getCodeModel instantiates the code model based on config.
-func getCodeModel(cfg *config.Config) models.Model {
+func getCodeModel(cfg *config.Config) modeliface.Model {
 	return models.NewCodeModel(cfg.CodeModel)
 }
 
