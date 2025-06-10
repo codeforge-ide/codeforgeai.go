@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/spf13/cobra"
+	"github.com/yourusername/githubmodels" // Import the GitHub Models client package
 )
 
 var (
@@ -131,7 +132,114 @@ func init() {
 		},
 	})
 	githubCmd.AddCommand(copilotCmd)
-	rootCmd.AddCommand(githubCmd)
+
+	githubModelsCmd := &cobra.Command{
+		Use:   "github-models",
+		Short: "Interact with GitHub Models API",
+	}
+
+	// github-models prompt
+	githubModelsPromptCmd := &cobra.Command{
+		Use:   "prompt [prompt]",
+		Short: "Send a simple prompt to GitHub Models",
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			token := os.Getenv("GITHUB_TOKEN")
+			if token == "" {
+				fmt.Println("GITHUB_TOKEN environment variable is required.")
+				return
+			}
+			client := githubmodels.NewClient(token)
+			resp, err := client.SimplePrompt(strings.Join(args, " "))
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			fmt.Println(resp)
+		},
+	}
+	githubModelsCmd.AddCommand(githubModelsPromptCmd)
+
+	// github-models multi-turn
+	githubModelsMultiTurnCmd := &cobra.Command{
+		Use:   "multi-turn",
+		Short: "Send a multi-turn conversation to GitHub Models",
+		Run: func(cmd *cobra.Command, args []string) {
+			token := os.Getenv("GITHUB_TOKEN")
+			if token == "" {
+				fmt.Println("GITHUB_TOKEN environment variable is required.")
+				return
+			}
+			// For demo, hardcode a conversation; in real use, parse from args or file
+			history := []githubmodels.Message{
+				{Role: "system", Content: "You are a helpful assistant."},
+				{Role: "user", Content: "What is the capital of France?"},
+				{Role: "assistant", Content: "The capital of France is Paris."},
+				{Role: "user", Content: "What about Spain?"},
+			}
+			client := githubmodels.NewClient(token)
+			resp, err := client.MultiTurn(history)
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			fmt.Println(resp)
+		},
+	}
+	githubModelsCmd.AddCommand(githubModelsMultiTurnCmd)
+
+	// github-models stream
+	githubModelsStreamCmd := &cobra.Command{
+		Use:   "stream [prompt]",
+		Short: "Stream a prompt response from GitHub Models",
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			token := os.Getenv("GITHUB_TOKEN")
+			if token == "" {
+				fmt.Println("GITHUB_TOKEN environment variable is required.")
+				return
+			}
+			client := githubmodels.NewClient(token)
+			resp, err := client.StreamPrompt(strings.Join(args, " "))
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			fmt.Println(resp)
+		},
+	}
+	githubModelsCmd.AddCommand(githubModelsStreamCmd)
+
+	// github-models image
+	githubModelsImageCmd := &cobra.Command{
+		Use:   "image [prompt] [image_path]",
+		Short: "Send an image prompt to GitHub Models",
+		Args:  cobra.ExactArgs(2),
+		Run: func(cmd *cobra.Command, args []string) {
+			token := os.Getenv("GITHUB_TOKEN")
+			if token == "" {
+				fmt.Println("GITHUB_TOKEN environment variable is required.")
+				return
+			}
+			imagePath := args[1]
+			imageData, err := os.ReadFile(imagePath)
+			if err != nil {
+				fmt.Println("Error reading image:", err)
+				return
+			}
+			imageB64 := encodeToBase64(imageData)
+			client := githubmodels.NewClient(token)
+			resp, err := client.ImagePrompt(args[0], imageB64)
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			fmt.Println(resp)
+		},
+	}
+	githubModelsCmd.AddCommand(githubModelsImageCmd)
+
+	rootCmd.AddCommand(githubModelsCmd)
 
 	// explain
 	explainCmd := &cobra.Command{
@@ -378,4 +486,9 @@ func init() {
 	})
 	solanaCmd.AddCommand(mcpCmd)
 	rootCmd.AddCommand(solanaCmd)
+}
+
+// Helper function for base64 encoding
+func encodeToBase64(data []byte) string {
+	return strings.TrimRight(strings.ReplaceAll(fmt.Sprintf("%+q", data), "\\x", ""), "\"")
 }
