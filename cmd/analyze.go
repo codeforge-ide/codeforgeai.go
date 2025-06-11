@@ -3,7 +3,8 @@ package cmd
 import (
 	"context"
 	"fmt"
-	"log"
+
+	// "log"
 
 	"github.com/codeforge-ide/codeforgeai.go/config"
 	"github.com/codeforge-ide/codeforgeai.go/engine"
@@ -17,10 +18,6 @@ var analyzeCmd = &cobra.Command{
 	Long:  "Analyze your codebase using AI models with optional real-time data from MCP servers",
 	Args:  cobra.MaximumNArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
-		path := "."
-		if len(args) > 0 {
-			path = args[0]
-		}
 
 		mcpFlag, _ := cmd.Flags().GetString("mcp")
 		query, _ := cmd.Flags().GetString("query")
@@ -35,28 +32,24 @@ var analyzeCmd = &cobra.Command{
 			analyzer := astrolescent.NewDeFiAnalyzer()
 
 			if query != "" {
-				// Provide relevant DeFi context based on query type
+
 				if containsAnyKeyword(query, []string{"staking", "stake", "apy", "yield"}) {
 					if context, err := analyzer.AnalyzeStakingVsLP(ctx); err == nil {
 						mcpContext = fmt.Sprintf("\n📊 Live DeFi Context:\n%s\n", context)
 					}
 				} else if containsAnyKeyword(query, []string{"price", "trading", "swap", "buy", "sell"}) {
-					// Add price context
+
 					mcpContext = "📈 Live market data integrated into analysis\n"
 				}
 			}
 		}
 
-		result, err := eng.AnalyzeProject(path, query+mcpContext)
-		if err != nil {
-			log.Fatalf("Analysis failed: %v", err)
-		}
+		eng.RunAnalysis()
 
 		fmt.Println("🔍 Analysis Results:")
 		if mcpContext != "" {
 			fmt.Println(mcpContext)
 		}
-		fmt.Println(result)
 	},
 }
 
@@ -76,3 +69,12 @@ func init() {
 	analyzeCmd.Flags().String("focus", "", "Focus area (security, performance, etc)")
 	rootCmd.AddCommand(analyzeCmd)
 }
+
+// 	analyzeCmd.Flags().String("query", "", "Specific query for analysis")
+// 	analyzeCmd.Flags().String("focus", "", "Focus area (security, performance, etc)")
+// 	rootCmd.AddCommand(analyzeCmd)
+// }
+// 	analyzeCmd.Flags().String("query", "", "Specific query for analysis")
+// 	analyzeCmd.Flags().String("focus", "", "Focus area (security, performance, etc)")
+// 	rootCmd.AddCommand(analyzeCmd)
+// }

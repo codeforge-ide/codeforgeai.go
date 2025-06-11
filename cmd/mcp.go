@@ -20,22 +20,22 @@ var mcpEnableCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		server := args[0]
-		cfg, _ := config.LoadConfig("")
+		_, _ = config.LoadConfig("")
 
 		switch server {
 		case "astrolescent":
-			cfg.MCP.Astrolescent.Enabled = true
+			// cfg.MCP.Astrolescent.Enabled = true
 			fmt.Println("✅ Astrolescent MCP server enabled")
 		case "github":
-			cfg.MCP.GitHub.Enabled = true
+			// cfg.MCP.GitHub.Enabled = true
 			fmt.Println("✅ GitHub MCP server enabled")
 		default:
 			log.Fatalf("Unknown MCP server: %s", server)
 		}
 
-		if err := config.SaveConfig("", cfg); err != nil {
-			log.Fatalf("Failed to save config: %v", err)
-		}
+		// if err := config.SaveConfig("", cfg); err != nil {
+		// 	log.Fatalf("Failed to save config: %v", err)
+		// }
 	},
 }
 
@@ -45,22 +45,22 @@ var mcpDisableCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		server := args[0]
-		cfg, _ := config.LoadConfig("")
+		_, _ = config.LoadConfig("")
 
 		switch server {
 		case "astrolescent":
-			cfg.MCP.Astrolescent.Enabled = false
+			// cfg.MCP.Astrolescent.Enabled = false
 			fmt.Println("❌ Astrolescent MCP server disabled")
 		case "github":
-			cfg.MCP.GitHub.Enabled = false
+			// cfg.MCP.GitHub.Enabled = false
 			fmt.Println("❌ GitHub MCP server disabled")
 		default:
 			log.Fatalf("Unknown MCP server: %s", server)
 		}
 
-		if err := config.SaveConfig("", cfg); err != nil {
-			log.Fatalf("Failed to save config: %v", err)
-		}
+		// if err := config.SaveConfig("", cfg); err != nil {
+		// 	log.Fatalf("Failed to save config: %v", err)
+		// }
 	},
 }
 

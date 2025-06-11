@@ -721,7 +721,7 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 		Short: "Run impressive demo showcasing all Astrolescent MCP capabilities",
 		Run: func(cmd *cobra.Command, args []string) {
 			fmt.Println("🚀 CodeforgeAI x Astrolescent MCP Demo")
-			fmt.Println("=" * 50)
+			fmt.Println(strings.Repeat("=", 50))
 			fmt.Println("Connecting to Radix DeFi ecosystem via MCP...")
 
 			client := astrolescent.NewClient()
@@ -749,7 +749,7 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 			}
 
 			fmt.Println("\n5️⃣ Calculating returns for 1000 ASTRL staked for 30 days...")
-			if calc, err := analyzer.CalculateStakingReturns("1000", 30); err == nil {
+			if calc, err := analyzer.CalculateStakingReturns(context.Background(), "1000", 30); err == nil {
 				fmt.Println(calc)
 			}
 
