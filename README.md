@@ -28,10 +28,20 @@ Connect your AI directly to the Radix DeFi ecosystem through our Astrolescent MC
 - 🌉 **Cross-Chain Insights**: Bridge data and multi-chain analytics
 - 🤖 **AI Trading Assistant**: Build intelligent DeFi bots and analysis tools
 
+#### Astro Subcommand Usage
+
 ```bash
-# Example: AI-powered DeFi analysis
-codeforgeai analyze --mcp astrolescent "What's the best yield strategy for 10k ASTRL today?"
+codeforgeai astro price
+codeforgeai astro quote [operation] [token] [amount] [account]
+codeforgeai astro apy
+codeforgeai astro analyze [type]
+codeforgeai astro calculator [amount] [days]
+codeforgeai astro trading-advice [from_token] [to_token] [amount]
+codeforgeai astro demo
 ```
+
+- `operation`: `buy`, `sell`, or `swap`
+- `type`: `staking-vs-lp`, `market`
 
 ### 🐙 GitHub Copilot Enhanced
 
@@ -134,6 +144,4 @@ Join the revolution! Whether you're building new MCP servers, adding LLM integra
 
 ---
 
-**Ready to forge the future of AI-powered development?** 🔥
-
-Star ⭐ this repo and join thousands of developers building with intelligent automation!
+**For detailed usage of all commands, see [`USAGE.md`](./USAGE.md).**
