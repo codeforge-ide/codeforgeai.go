@@ -89,20 +89,3 @@ func (c *Client) GetAPY() (*APYResponse, error) {
 		Text: "💰 ASTRL Yields: Staking 12.5% APY | DefiPlaza LP 15.8% APY | Validator Rewards 3.2% | Total Staked: 2.5M ASTRL",
 	}, nil
 }
-
-// Legacy methods for backwards compatibility with root.go commands
-func (d *DeFiAnalyzer) AnalyzeStakingVsLP() (string, error) {
-	// Wrapper for the context version
-	return d.AnalyzeStakingVsLP(context.Background())
-}
-
-func (d *DeFiAnalyzer) CalculateStakingReturns(amount string, days int) (string, error) {
-	// Wrapper for the context version
-	return d.CalculateStakingReturns(context.Background(), amount, days)
-}
-
-func (d *DeFiAnalyzer) GetTradingAdvice(fromToken, toToken, amount string) (string, error) {
-	// Wrapper for the context version
-	return d.GetTradingAdvice(context.Background(), fromToken, toToken, amount)
-}
-}
