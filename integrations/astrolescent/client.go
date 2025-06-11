@@ -1,7 +1,6 @@
 package astrolescent
 
 import (
-	"context"
 	"fmt"
 	"net/http"
 	"time"
@@ -105,4 +104,5 @@ func (d *DeFiAnalyzer) CalculateStakingReturns(amount string, days int) (string,
 func (d *DeFiAnalyzer) GetTradingAdvice(fromToken, toToken, amount string) (string, error) {
 	// Wrapper for the context version
 	return d.GetTradingAdvice(context.Background(), fromToken, toToken, amount)
+}
 }
