@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"strings"
@@ -633,7 +634,7 @@ Analysis types:
 
 			switch analysisType {
 			case "staking-vs-lp":
-				result, err := analyzer.AnalyzeStakingVsLP()
+				result, err := analyzer.AnalyzeStakingVsLP(context.Background())
 				if err != nil {
 					fmt.Printf("Error performing analysis: %v\n", err)
 					return
@@ -646,7 +647,7 @@ Analysis types:
 				apy, _ := client.GetAPY()
 
 				fmt.Println("🌌 Comprehensive Radix DeFi Market Analysis")
-				fmt.Println("=" * 50)
+				fmt.Println(strings.Repeat("=", 50))
 				fmt.Println(price.Text)
 				fmt.Println("\n" + apy.Text)
 
@@ -681,7 +682,7 @@ Example: codeforgeai astro calculator 1000 30`,
 			}
 
 			analyzer := astrolescent.NewDeFiAnalyzer()
-			result, err := analyzer.CalculateStakingReturns(amount, days)
+			result, err := analyzer.CalculateStakingReturns(context.Background(), amount, days)
 			if err != nil {
 				fmt.Printf("Error calculating returns: %v\n", err)
 				return
@@ -704,7 +705,7 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 			amount := args[2]
 
 			analyzer := astrolescent.NewDeFiAnalyzer()
-			result, err := analyzer.GetTradingAdvice(fromToken, toToken, amount)
+			result, err := analyzer.GetTradingAdvice(context.Background(), fromToken, toToken, amount)
 			if err != nil {
 				fmt.Printf("Error getting trading advice: %v\n", err)
 				return
@@ -743,7 +744,7 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 			}
 
 			fmt.Println("\n4️⃣ AI Analysis: Staking vs LP Strategy...")
-			if analysis, err := analyzer.AnalyzeStakingVsLP(); err == nil {
+			if analysis, err := analyzer.AnalyzeStakingVsLP(context.Background()); err == nil {
 				fmt.Println(analysis)
 			}
 

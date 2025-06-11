@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/codeforge-ide/codeforgeai.go/config"
 	"github.com/codeforge-ide/codeforgeai.go/engine"
 	"github.com/codeforge-ide/codeforgeai.go/integrations/astrolescent"
 	"github.com/spf13/cobra"
@@ -24,7 +25,8 @@ var analyzeCmd = &cobra.Command{
 		mcpFlag, _ := cmd.Flags().GetString("mcp")
 		query, _ := cmd.Flags().GetString("query")
 
-		eng := engine.NewEngine()
+		cfg, _ := config.EnsureConfigPrompts("")
+		eng := engine.NewEngine(&cfg)
 		ctx := context.Background()
 
 		// Add MCP context if enabled

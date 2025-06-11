@@ -20,7 +20,7 @@ var mcpEnableCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		server := args[0]
-		cfg := config.GetConfig()
+		cfg, _ := config.LoadConfig("")
 
 		switch server {
 		case "astrolescent":
@@ -33,7 +33,7 @@ var mcpEnableCmd = &cobra.Command{
 			log.Fatalf("Unknown MCP server: %s", server)
 		}
 
-		if err := config.SaveConfig(cfg); err != nil {
+		if err := config.SaveConfig("", cfg); err != nil {
 			log.Fatalf("Failed to save config: %v", err)
 		}
 	},
@@ -45,7 +45,7 @@ var mcpDisableCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		server := args[0]
-		cfg := config.GetConfig()
+		cfg, _ := config.LoadConfig("")
 
 		switch server {
 		case "astrolescent":
@@ -58,7 +58,7 @@ var mcpDisableCmd = &cobra.Command{
 			log.Fatalf("Unknown MCP server: %s", server)
 		}
 
-		if err := config.SaveConfig(cfg); err != nil {
+		if err := config.SaveConfig("", cfg); err != nil {
 			log.Fatalf("Failed to save config: %v", err)
 		}
 	},
