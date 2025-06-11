@@ -57,7 +57,7 @@ Recent price action indicates %s market conditions. Consider this when evaluatin
 3. Consider hybrid approach (split allocation)
 4. Set alerts for significant APY changes
 
-💡 Hackathon Note: This analysis uses live MCP data from Astrolescent!
+💡 Note: This analysis uses live MCP data from Astrolescent!
 `, price.Text, apy.Text, d.getMarketSentiment(price))
 	return analysis, nil
 }
@@ -89,7 +89,7 @@ func (d *DeFiAnalyzer) CalculateStakingReturns(ctx context.Context, amount strin
 
 ⚠️  Disclaimer: Estimates based on current APY. Actual returns may vary.
 
-🏆 Hackathon Feature: Real-time calculations using Astrolescent MCP!
+🏆  Feature: Real-time calculations using Astrolescent MCP!
 `, amount, days, price.Text, apy.Text, projectedReturns)
 	return calculation, nil
 }
@@ -121,7 +121,7 @@ func (d *DeFiAnalyzer) GetTradingAdvice(ctx context.Context, fromToken, toToken,
 🔍 Risk Assessment:
 %s
 
-🤖 Hackathon Demo: Your AI DeFi assistant powered by Astrolescent MCP!
+🤖 Demo: Your AI DeFi assistant powered by Astrolescent MCP!
 `, amount, fromToken, toToken, price.Text, quote.Text,
 		d.generateTradingInsights(quote, price),
 		d.generateExecutionStrategy(amount, quote),

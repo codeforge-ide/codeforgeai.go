@@ -11,15 +11,15 @@ import (
 
 var demoCmd = &cobra.Command{
 	Use:   "demo",
-	Short: "Run Astrolescent MCP Hackathon demo",
-	Long:  "Demonstrate all hackathon features: AI DeFi assistant, staking calculator, and trading sidekick",
+	Short: "Run Astrolescent MCP demo",
+	Long:  "Demonstrate all features: AI DeFi assistant, staking calculator, and trading sidekick",
 	Run: func(cmd *cobra.Command, args []string) {
 		runHackathonDemo()
 	},
 }
 
 func runHackathonDemo() {
-	fmt.Println("🏆 ASTROLESCENT MCP HACKATHON DEMO")
+	fmt.Println("🏆 ASTROLESCENT MCP DEMO")
 	fmt.Println("=================================")
 	fmt.Println("CodeForgeAI.go: AI-Powered DeFi Assistant")
 	fmt.Println()
@@ -71,7 +71,7 @@ func runHackathonDemo() {
 	}
 	fmt.Println()
 
-	fmt.Println("🏆 HACKATHON SUBMISSION SUMMARY")
+	fmt.Println("🏆  SUMMARY")
 	fmt.Println("===============================")
 	fmt.Println("✅ Usefulness: Solves real DeFi decision-making problems")
 	fmt.Println("✅ Creativity: AI-powered analysis with live MCP data")
@@ -80,7 +80,7 @@ func runHackathonDemo() {
 	fmt.Println("✅ Multi-MCP Bonus: Bridge analysis feature")
 	fmt.Println()
 	fmt.Println("🚀 Ready for submission!")
-	fmt.Println("📧 Contact: Built for Astrolescent MCP Hackathon")
+	fmt.Println("📧 Contact: Built for Astrolescent MCP")
 	fmt.Println("🔗 Code: https://github.com/codeforge-ide/codeforgeai.go")
 }
 
