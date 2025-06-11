@@ -43,7 +43,7 @@ codeforgeai astro demo
 - `operation`: `buy`, `sell`, or `swap`
 - `type`: `staking-vs-lp`, `market`
 
-### 🐙 GitHub Copilot Enhanced
+### 🐙 GitHub Copilot and copilot MCP integration
 
 Supercharge your GitHub Copilot experience with contextual project intelligence:
 
