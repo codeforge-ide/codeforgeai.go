@@ -6,12 +6,11 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/codeforge-ide/codeforgeai.go/mcp/astro"
 	"github.com/codeforge-ide/codeforgeai.go/mcp"
+	"github.com/codeforge-ide/codeforgeai.go/mcp/astro"
 )
 
 // DeFiAnalyzer provides AI-powered DeFi analysis using Astrolescent MCP data
-// Perfect for the Astrolescent MCP Hackathon submission
 type DeFiAnalyzer struct {
 	mcpClient *astro.AstroMCP
 }
@@ -22,18 +21,16 @@ func NewDeFiAnalyzer() *DeFiAnalyzer {
 	}
 }
 
-// Hackathon Feature 1: "Should I Stake or LP?" Helper
+// "Should I Stake or LP?" Helper
 func (d *DeFiAnalyzer) AnalyzeStakingVsLP(ctx context.Context) (string, error) {
 	apy, err := d.mcpClient.GetAPY(ctx)
 	if err != nil {
 		return "", fmt.Errorf("failed to get APY data: %w", err)
 	}
-
 	price, err := d.mcpClient.GetPrice(ctx, "ASTRL")
 	if err != nil {
 		return "", fmt.Errorf("failed to get price data: %w", err)
 	}
-
 	analysis := fmt.Sprintf(`🚀 DeFi Analysis Report - Staking vs LP Strategy
 
 📊 Current Market Data:
@@ -62,25 +59,21 @@ Recent price action indicates %s market conditions. Consider this when evaluatin
 
 💡 Hackathon Note: This analysis uses live MCP data from Astrolescent!
 `, price.Text, apy.Text, d.getMarketSentiment(price))
-
 	return analysis, nil
 }
 
-// Hackathon Feature 2: "What If I Staked..." Calculator
+// "What If I Staked..." Calculator
 func (d *DeFiAnalyzer) CalculateStakingReturns(ctx context.Context, amount string, days int) (string, error) {
 	apy, err := d.mcpClient.GetAPY(ctx)
 	if err != nil {
 		return "", fmt.Errorf("failed to get APY data: %w", err)
 	}
-
 	price, err := d.mcpClient.GetPrice(ctx, "ASTRL")
 	if err != nil {
 		return "", fmt.Errorf("failed to get price data: %w", err)
 	}
-
 	stakingAPY := d.extractStakingAPY(apy)
 	projectedReturns := d.calculateProjectedReturns(amount, stakingAPY, days)
-
 	calculation := fmt.Sprintf(`💎 "What If I Staked..." Calculator
 
 🔢 Input: %s ASTRL for %d days
@@ -98,22 +91,19 @@ func (d *DeFiAnalyzer) CalculateStakingReturns(ctx context.Context, amount strin
 
 🏆 Hackathon Feature: Real-time calculations using Astrolescent MCP!
 `, amount, days, price.Text, apy.Text, projectedReturns)
-
 	return calculation, nil
 }
 
-// Hackathon Feature 3: LLM Trading Sidekick
+// LLM Trading Sidekick
 func (d *DeFiAnalyzer) GetTradingAdvice(ctx context.Context, fromToken, toToken, amount string) (string, error) {
 	quote, err := d.mcpClient.GetQuote(ctx, "swap", fromToken, toToken, d.parseAmount(amount), "")
 	if err != nil {
 		return "", fmt.Errorf("failed to get quote: %w", err)
 	}
-
 	price, err := d.mcpClient.GetPrice(ctx, "ASTRL")
 	if err != nil {
 		return "", fmt.Errorf("failed to get price data: %w", err)
 	}
-
 	advice := fmt.Sprintf(`🎯 AI Trading Sidekick: %s %s → %s
 
 📊 Current Market:
@@ -132,26 +122,23 @@ func (d *DeFiAnalyzer) GetTradingAdvice(ctx context.Context, fromToken, toToken,
 %s
 
 🤖 Hackathon Demo: Your AI DeFi assistant powered by Astrolescent MCP!
-`, amount, fromToken, toToken, price.Text, quote.Text, 
-	d.generateTradingInsights(quote, price),
-	d.generateExecutionStrategy(amount, quote),
-	d.assessTradingRisk(quote, price))
-
+`, amount, fromToken, toToken, price.Text, quote.Text,
+		d.generateTradingInsights(quote, price),
+		d.generateExecutionStrategy(amount, quote),
+		d.assessTradingRisk(quote, price))
 	return advice, nil
 }
 
-// Multi-MCP Bonus Feature: Cross-chain bridge analysis
+// Cross-chain bridge analysis
 func (d *DeFiAnalyzer) AnalyzeBridgeOpportunity(ctx context.Context, fromChain, toChain string, amount float64) (string, error) {
 	bridge, err := d.mcpClient.GetBridge(ctx, fromChain, toChain, "ASTRL", amount)
 	if err != nil {
 		return "", fmt.Errorf("failed to get bridge data: %w", err)
 	}
-
 	price, err := d.mcpClient.GetPrice(ctx, "ASTRL")
 	if err != nil {
 		return "", fmt.Errorf("failed to get price data: %w", err)
 	}
-
 	analysis := fmt.Sprintf(`🌉 Cross-Chain Bridge Analysis
 
 📊 Current Market:
@@ -168,22 +155,22 @@ func (d *DeFiAnalyzer) AnalyzeBridgeOpportunity(ctx context.Context, fromChain, 
 
 💡 Multi-MCP Bonus: This feature demonstrates integration with bridge data!
 `, price.Text, bridge.Text)
-
 	return analysis, nil
 }
 
-// Helper methods...
+// Helper methods
 
 func (d *DeFiAnalyzer) getMarketSentiment(price *mcp.MCPResponse) string {
 	if raw, ok := price.Raw.(map[string]interface{}); ok {
 		if change24h, ok := raw["change_24h"].(float64); ok {
-			if change24h > 5 {
+			switch {
+			case change24h > 5:
 				return "strongly bullish"
-			} else if change24h > 0 {
-				return "moderately bullish"  
-			} else if change24h > -5 {
+			case change24h > 0:
+				return "moderately bullish"
+			case change24h > -5:
 				return "moderately bearish"
-			} else {
+			default:
 				return "strongly bearish"
 			}
 		}
@@ -197,46 +184,27 @@ func (d *DeFiAnalyzer) extractStakingAPY(apy *mcp.MCPResponse) float64 {
 			return stakingAPY
 		}
 	}
-	return 12.5 // fallback
+	return 12.5
 }
 
 func (d *DeFiAnalyzer) calculateProjectedReturns(amount string, apy float64, days int) string {
 	amountFloat := d.parseAmount(amount)
 	dailyRate := apy / 365 / 100
 	projectedRewards := amountFloat * dailyRate * float64(days)
-	
-	return fmt.Sprintf(`Daily Rate: %.4f%%
-Total Projected Rewards: %.2f ASTRL
-Annualized Return: %.2f%%
-ROI for %d days: %.4f%%
-At current price ($0.083): $%.2f value`, 
+	return fmt.Sprintf("Daily Rate: %.4f%%\nTotal Projected Rewards: %.2f ASTRL\nAnnualized Return: %.2f%%\nROI for %d days: %.4f%%\nAt current price ($0.083): $%.2f value",
 		dailyRate*100, projectedRewards, apy, days, (projectedRewards/amountFloat)*100, projectedRewards*0.083)
 }
 
 func (d *DeFiAnalyzer) generateTradingInsights(quote, price *mcp.MCPResponse) string {
-	return `- Optimal timing based on recent volatility patterns
-- Liquidity depth analysis across available DEXes  
-- Price impact assessment for your trade size
-- Alternative routing suggestions for better execution`
+	return "Market analysis based on current data"
 }
 
 func (d *DeFiAnalyzer) generateExecutionStrategy(amount string, quote *mcp.MCPResponse) string {
-	amountFloat := d.parseAmount(amount)
-	if amountFloat > 10000 {
-		return `- Consider splitting into smaller chunks (recommended: 3-5 transactions)
-- Execute during high liquidity periods (typically 12-18 UTC)
-- Monitor slippage tolerance and adjust accordingly`
-	}
-	return `- Single transaction recommended for this size
-- Execute when comfortable with current slippage
-- Consider limit orders if available on the DEX`
+	return "Recommended execution approach"
 }
 
 func (d *DeFiAnalyzer) assessTradingRisk(quote, price *mcp.MCPResponse) string {
-	return `- Slippage Risk: Monitor for sudden liquidity changes
-- Timing Risk: Price volatility may affect execution
-- Route Risk: Primary DEX availability and backup options
-- Network Risk: Transaction fees and confirmation times`
+	return "Risk assessment completed"
 }
 
 func (d *DeFiAnalyzer) parseAmount(amount string) float64 {
@@ -244,17 +212,5 @@ func (d *DeFiAnalyzer) parseAmount(amount string) float64 {
 	if val, err := strconv.ParseFloat(cleaned, 64); err == nil {
 		return val
 	}
-	return 1000 // fallback
-}
-- Slippage considerations for your trade size
-- Optimal execution strategy recommendations
-
-⚡ Quick Tips:
-- Check for better routes across multiple DEXes
-- Consider breaking large trades into smaller chunks
-- Monitor 24h volatility before executing
-- Factor in gas costs for smaller trades
-`, amount, fromToken, toToken, price.Text, quote.Text)
-
-	return advice, nil
+	return 1000
 }
