@@ -24,6 +24,8 @@ type Config struct {
 	GeneralPrompt                 string             `json:"general_prompt"`
 	CodeModel                     string             `json:"code_model"`
 	CodePrompt                    string             `json:"code_prompt"`
+	GeneralModelGithub            string             `json:"general_model_github"`
+	CodeModelGithub               string             `json:"code_model_github"`
 	DirectoryClassificationPrompt string             `json:"directory_classification_prompt"`
 	Debug                         bool               `json:"debug"`
 	FormatLineSeparator           int                `json:"format_line_separator"`
@@ -51,6 +53,8 @@ func DefaultConfig() Config {
 		GeneralPrompt:                 "based on the below prompt and without returning anything else, restructure it so that it is strictly understandable to a coding ai agent with json output for file changes:",
 		CodeModel:                     "qwen2.5-coder:1.5b",
 		CodePrompt:                    "in very clear, concise manner, solve the below request:",
+		GeneralModelGithub:            "gpt-4o-mini",
+		CodeModelGithub:               "gpt-4o-mini",
 		DirectoryClassificationPrompt: "Given the complete tree structure below as valid JSON, recursively process every single file and directory (based on its relative path) that is present. For each node, assign exactly one classification: 'useful' for files and directories that developers interact with, 'useless' for build, template, or temporary files and directories, and 'source' for source control or related files. For every node, return an object with the keys: 'type' (either 'file' or 'directory'), 'name', 'contents' (an array of child entries for directories, or file details for files), and a new key 'classification' that holds one of 'useful', 'useless', or 'source'. Ensure every file and directory from the input is included exactly once with one classification. Return only valid JSON with this structure and nothing else.",
 		Debug:                         false,
 		FormatLineSeparator:           5,
