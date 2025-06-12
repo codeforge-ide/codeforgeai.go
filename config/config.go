@@ -10,7 +10,7 @@ import (
 type IntegrationsConfig struct {
 	Ollama        IntegrationEntry `json:"ollama"`
 	GithubModels  IntegrationEntry `json:"githubmodels"`
-	OpenAI        IntegrationEntry `json:"openai"`
+	OpenAPI       IntegrationEntry `json:"openapi"`
 	GithubCopilot IntegrationEntry `json:"githubcopilot"`
 	Default       string           `json:"default"`
 }
@@ -70,7 +70,7 @@ func DefaultConfig() Config {
 		Integrations: IntegrationsConfig{
 			Ollama:        IntegrationEntry{Enabled: true},
 			GithubModels:  IntegrationEntry{Enabled: false},
-			OpenAI:        IntegrationEntry{Enabled: false},
+			OpenAPI:       IntegrationEntry{Enabled: false},
 			GithubCopilot: IntegrationEntry{Enabled: false},
 			Default:       "ollama",
 		},

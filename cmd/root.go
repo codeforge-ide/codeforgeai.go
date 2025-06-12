@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"os"
 	"strings"
@@ -764,9 +765,126 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 	astroCmd.AddCommand(astroDemoCmd)
 
 	rootCmd.AddCommand(astroCmd)
+
+	// --- Enable/Disable Integration/Extension Commands ---
+
+	enableCmd := &cobra.Command{
+		Use:   "enable",
+		Short: "Enable an integration or extension",
+	}
+
+	disableCmd := &cobra.Command{
+		Use:   "disable",
+		Short: "Disable an integration or extension",
+	}
+
+	// Enable Integration
+	enableIntegrationCmd := &cobra.Command{
+		Use:   "integration [name]",
+		Short: "Enable an integration (e.g. ollama, githubmodels, openapi, githubcopilot)",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			name := args[0]
+			cfg, _ := config.EnsureConfigPrompts("")
+			changed, err := setIntegrationEnabled(&cfg, name, true)
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			if changed {
+				config.SaveConfig("", cfg)
+				fmt.Printf("Integration '%s' enabled.\n", name)
+			} else {
+				fmt.Printf("Integration '%s' was already enabled or not found.\n", name)
+			}
+		},
+	}
+	enableCmd.AddCommand(enableIntegrationCmd)
+
+	// Disable Integration
+	disableIntegrationCmd := &cobra.Command{
+		Use:   "integration [name]",
+		Short: "Disable an integration (e.g. ollama, githubmodels, openapi, githubcopilot)",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			name := args[0]
+			cfg, _ := config.EnsureConfigPrompts("")
+			changed, err := setIntegrationEnabled(&cfg, name, false)
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			if changed {
+				config.SaveConfig("", cfg)
+				fmt.Printf("Integration '%s' disabled.\n", name)
+			} else {
+				fmt.Printf("Integration '%s' was already disabled or not found.\n", name)
+			}
+		},
+	}
+	disableCmd.AddCommand(disableIntegrationCmd)
+
+	// Enable Extension (stub)
+	enableExtensionCmd := &cobra.Command{
+		Use:   "extension [name]",
+		Short: "Enable an extension (stub)",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("Extension '%s' enabled (stub, not implemented).\n", args[0])
+		},
+	}
+	enableCmd.AddCommand(enableExtensionCmd)
+
+	// Disable Extension (stub)
+	disableExtensionCmd := &cobra.Command{
+		Use:   "extension [name]",
+		Short: "Disable an extension (stub)",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("Extension '%s' disabled (stub, not implemented).\n", args[0])
+		},
+	}
+	disableCmd.AddCommand(disableExtensionCmd)
+
+	rootCmd.AddCommand(enableCmd)
+	rootCmd.AddCommand(disableCmd)
 }
 
 // Helper function for base64 encoding
 func encodeToBase64(data []byte) string {
 	return strings.TrimRight(strings.ReplaceAll(fmt.Sprintf("%+q", data), "\\x", ""), "\"")
+}
+
+// setIntegrationEnabled enables/disables an integration by name (case-insensitive).
+func setIntegrationEnabled(cfg *config.Config, name string, enabled bool) (bool, error) {
+	switch name {
+	case "ollama":
+		if cfg.Integrations.Ollama.Enabled != enabled {
+			cfg.Integrations.Ollama.Enabled = enabled
+			return true, nil
+		}
+	case "githubmodels":
+		if cfg.Integrations.GithubModels.Enabled != enabled {
+			cfg.Integrations.GithubModels.Enabled = enabled
+			return true, nil
+		}
+	case "openapi":
+		if cfg.Integrations.OpenAPI.Enabled != enabled {
+			cfg.Integrations.OpenAPI.Enabled = enabled
+			return true, nil
+		}
+	case "githubcopilot":
+		if cfg.Integrations.GithubCopilot.Enabled != enabled {
+			cfg.Integrations.GithubCopilot.Enabled = enabled
+			return true, nil
+		}
+	default:
+		return false, errors.New("unknown integration: " + name)
+	}
+	return false, nil
+}
+	default:
+		return false, errors.New("unknown integration: " + name)
+	}
+	return false, nil
 }
