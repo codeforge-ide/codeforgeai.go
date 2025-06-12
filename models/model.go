@@ -39,4 +39,3 @@ func GetModelFromConfig(cfg *config.Config, modelType string) (Model, error) {
 		return nil, errors.New("unknown model provider: " + provider)
 	}
 }
-}

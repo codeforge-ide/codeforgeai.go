@@ -172,7 +172,7 @@ func init() {
 				fmt.Println("GITHUB_TOKEN environment variable is required.")
 				return
 			}
-			client := githubmodels.NewClient(token)
+			client := githubmodels.NewClient(token, "", "")
 			resp, err := client.SimplePrompt(strings.Join(args, " "))
 			if err != nil {
 				fmt.Println("Error:", err)
@@ -200,7 +200,7 @@ func init() {
 				{Role: "assistant", Content: "The capital of France is Paris."},
 				{Role: "user", Content: "What about Spain?"},
 			}
-			client := githubmodels.NewClient(token)
+			client := githubmodels.NewClient(token, "", "")
 			resp, err := client.MultiTurn(history)
 			if err != nil {
 				fmt.Println("Error:", err)
@@ -222,7 +222,7 @@ func init() {
 				fmt.Println("GITHUB_TOKEN environment variable is required.")
 				return
 			}
-			client := githubmodels.NewClient(token)
+			client := githubmodels.NewClient(token, "", "")
 			resp, err := client.StreamPrompt(strings.Join(args, " "))
 			if err != nil {
 				fmt.Println("Error:", err)
@@ -251,7 +251,7 @@ func init() {
 				return
 			}
 			imageB64 := encodeToBase64(imageData)
-			client := githubmodels.NewClient(token)
+			client := githubmodels.NewClient(token, "", "")
 			resp, err := client.ImagePrompt(args[0], imageB64)
 			if err != nil {
 				fmt.Println("Error:", err)
