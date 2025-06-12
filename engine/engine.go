@@ -9,7 +9,6 @@ import (
 
 	"github.com/codeforge-ide/codeforgeai.go/config"
 	"github.com/codeforge-ide/codeforgeai.go/directory"
-	"github.com/codeforge-ide/codeforgeai.go/modeliface"
 	"github.com/codeforge-ide/codeforgeai.go/models"
 )
 
@@ -27,13 +26,21 @@ func loadFreshConfig() (config.Config, error) {
 }
 
 // getGeneralModel instantiates the general model based on config.
-func getGeneralModel(cfg *config.Config) modeliface.Model {
-	return models.NewGeneralModel(cfg.GeneralModel)
+func getGeneralModel(cfg *config.Config) models.Model {
+	model, err := models.GetModelFromConfig(cfg, "general")
+	if err != nil {
+		panic(err)
+	}
+	return model
 }
 
 // getCodeModel instantiates the code model based on config.
-func getCodeModel(cfg *config.Config) modeliface.Model {
-	return models.NewCodeModel(cfg.CodeModel)
+func getCodeModel(cfg *config.Config) models.Model {
+	model, err := models.GetModelFromConfig(cfg, "code")
+	if err != nil {
+		panic(err)
+	}
+	return model
 }
 
 // RunAnalysis analyzes the current directory and classifies files.

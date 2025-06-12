@@ -42,6 +42,7 @@ type Config struct {
 	ExtractCodeBlocksPrompt       string             `json:"extract_code_blocks_prompt"`
 	FormatCodePrompt              string             `json:"format_code_prompt"`
 	Integrations                  IntegrationsConfig `json:"integrations"`
+	// Optionally add GithubToken string `json:"github_token"` to Config struct if you want to support it from config.
 }
 
 func DefaultConfig() Config {

@@ -15,7 +15,7 @@ import (
 
 const (
 	defaultEndpoint = "https://models.inference.ai.azure.com/chat/completions"
-	defaultModel    = "gpt-4o-mini"
+	defaultModel    = ""
 )
 
 // Message represents a chat message for the API.
@@ -49,14 +49,16 @@ type Client struct {
 }
 
 // NewClient creates a new GitHub Models client.
-func NewClient(token string) *Client {
-	endpoint := os.Getenv("GITHUB_MODELS_ENDPOINT")
+// Accepts model name and endpoint as arguments, falling back to env or default if empty.
+func NewClient(token string, model string, endpoint string) *Client {
 	if endpoint == "" {
-		endpoint = defaultEndpoint
+		endpoint = os.Getenv("GITHUB_MODELS_ENDPOINT")
+		if endpoint == "" {
+			endpoint = defaultEndpoint
+		}
 	}
-	model := os.Getenv("GITHUB_MODELS_MODEL")
 	if model == "" {
-		model = defaultModel
+		model = os.Getenv("GITHUB_MODELS_MODEL")
 	}
 	timeout := 60 * time.Second
 	return &Client{
@@ -210,4 +212,10 @@ func (c *Client) ImagePrompt(prompt string, imageB64 string) (string, error) {
 		}},
 	}
 	return c.ChatAuto(msgs, false)
+}
+
+// Ensure *Client implements models.Model interface
+func (c *Client) SendRequest(prompt string, config interface{}) (string, error) {
+	// Use SimplePrompt for general, or allow config to select other helpers
+	return c.SimplePrompt(prompt)
 }
