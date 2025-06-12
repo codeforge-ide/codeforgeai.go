@@ -12,6 +12,7 @@ import (
 	"github.com/codeforge-ide/codeforgeai.go/engine"
 	"github.com/codeforge-ide/codeforgeai.go/integrations/astrolescent"
 	"github.com/codeforge-ide/codeforgeai.go/integrations/githubmodels"
+	"github.com/codeforge-ide/codeforgeai.go/secrets"
 	"github.com/spf13/cobra"
 )
 
@@ -261,6 +262,38 @@ func init() {
 		},
 	}
 	githubModelsCmd.AddCommand(githubModelsImageCmd)
+
+	// github-models token-store
+	githubModelsTokenStoreCmd := &cobra.Command{
+		Use:   "token-store",
+		Short: "Securely store your GitHub Models API token",
+		Run: func(cmd *cobra.Command, args []string) {
+			err := secrets.InteractiveStoreGithubToken()
+			if err != nil {
+				fmt.Println("Error storing token:", err)
+			} else {
+				fmt.Println("GitHub token stored securely.")
+			}
+		},
+	}
+	githubModelsCmd.AddCommand(githubModelsTokenStoreCmd)
+
+	// github-models token-load
+	githubModelsTokenLoadCmd := &cobra.Command{
+		Use:   "token-load",
+		Short: "Load your GitHub Models API token into the environment for this session",
+		Run: func(cmd *cobra.Command, args []string) {
+			token, err := secrets.InteractiveLoadGithubToken()
+			if err != nil {
+				fmt.Println("Error loading token:", err)
+			} else {
+				fmt.Println("GitHub token loaded into environment for this session.")
+				// Optionally print token for debug (not recommended for real use)
+				_ = token
+			}
+		},
+	}
+	githubModelsCmd.AddCommand(githubModelsTokenLoadCmd)
 
 	rootCmd.AddCommand(githubModelsCmd)
 
