@@ -7,28 +7,41 @@ import (
 	"path/filepath"
 )
 
+type IntegrationsConfig struct {
+	Ollama        IntegrationEntry `json:"ollama"`
+	GithubModels  IntegrationEntry `json:"githubmodels"`
+	OpenAI        IntegrationEntry `json:"openai"`
+	GithubCopilot IntegrationEntry `json:"githubcopilot"`
+	Default       string           `json:"default"`
+}
+
+type IntegrationEntry struct {
+	Enabled bool `json:"enabled"`
+}
+
 type Config struct {
-	GeneralModel                  string `json:"general_model"`
-	GeneralPrompt                 string `json:"general_prompt"`
-	CodeModel                     string `json:"code_model"`
-	CodePrompt                    string `json:"code_prompt"`
-	DirectoryClassificationPrompt string `json:"directory_classification_prompt"`
-	Debug                         bool   `json:"debug"`
-	FormatLineSeparator           int    `json:"format_line_separator"`
-	GitmojiPrompt                 string `json:"gitmoji_prompt"`
-	CommitMessagePrompt           string `json:"commit_message_prompt"`
-	EditFinetunePrompt            string `json:"edit_finetune_prompt"`
-	CodeOrCommand                 string `json:"code_or_command"`
-	CommandAgentPrompt            string `json:"command_agent_prompt"`
-	PromptFinetunePrompt          string `json:"prompt_finetune_prompt"`
-	LanguageClassificationPrompt  string `json:"language_classification_prompt"`
-	ReadmeSummaryPrompt           string `json:"readme_summary_prompt"`
-	SpecificFileClassification    string `json:"specific_file_classification"`
-	ImproveCodePrompt             string `json:"improve_code_prompt"`
-	ExplainCodePrompt             string `json:"explain_code_prompt"`
-	SuggestionPrompt              string `json:"suggestion_prompt"`
-	ExtractCodeBlocksPrompt       string `json:"extract_code_blocks_prompt"`
-	FormatCodePrompt              string `json:"format_code_prompt"`
+	GeneralModel                  string             `json:"general_model"`
+	GeneralPrompt                 string             `json:"general_prompt"`
+	CodeModel                     string             `json:"code_model"`
+	CodePrompt                    string             `json:"code_prompt"`
+	DirectoryClassificationPrompt string             `json:"directory_classification_prompt"`
+	Debug                         bool               `json:"debug"`
+	FormatLineSeparator           int                `json:"format_line_separator"`
+	GitmojiPrompt                 string             `json:"gitmoji_prompt"`
+	CommitMessagePrompt           string             `json:"commit_message_prompt"`
+	EditFinetunePrompt            string             `json:"edit_finetune_prompt"`
+	CodeOrCommand                 string             `json:"code_or_command"`
+	CommandAgentPrompt            string             `json:"command_agent_prompt"`
+	PromptFinetunePrompt          string             `json:"prompt_finetune_prompt"`
+	LanguageClassificationPrompt  string             `json:"language_classification_prompt"`
+	ReadmeSummaryPrompt           string             `json:"readme_summary_prompt"`
+	SpecificFileClassification    string             `json:"specific_file_classification"`
+	ImproveCodePrompt             string             `json:"improve_code_prompt"`
+	ExplainCodePrompt             string             `json:"explain_code_prompt"`
+	SuggestionPrompt              string             `json:"suggestion_prompt"`
+	ExtractCodeBlocksPrompt       string             `json:"extract_code_blocks_prompt"`
+	FormatCodePrompt              string             `json:"format_code_prompt"`
+	Integrations                  IntegrationsConfig `json:"integrations"`
 }
 
 func DefaultConfig() Config {
@@ -54,6 +67,13 @@ func DefaultConfig() Config {
 		SuggestionPrompt:              "provide a helpful code suggestion for the following code context:",
 		ExtractCodeBlocksPrompt:       "extract all code blocks from the following text and return them in a structured format:",
 		FormatCodePrompt:              "format the following code for better readability while preserving functionality:",
+		Integrations: IntegrationsConfig{
+			Ollama:        IntegrationEntry{Enabled: true},
+			GithubModels:  IntegrationEntry{Enabled: false},
+			OpenAI:        IntegrationEntry{Enabled: false},
+			GithubCopilot: IntegrationEntry{Enabled: false},
+			Default:       "ollama",
+		},
 	}
 }
 
@@ -133,6 +153,11 @@ func EnsureConfigPrompts(path string) (Config, error) {
 	}
 	if cfg.FormatCodePrompt == "" {
 		cfg.FormatCodePrompt = def.FormatCodePrompt
+		changed = true
+	}
+	// Ensure integrations config is present and complete
+	if cfg.Integrations.Default == "" {
+		cfg.Integrations = def.Integrations
 		changed = true
 	}
 	if changed {

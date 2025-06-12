@@ -19,5 +19,20 @@
   "explain_code_prompt": "explain the following code in a clear and concise manner",
   "suggestion_prompt": "provide a helpful code suggestion for the following code context:",
   "extract_code_blocks_prompt": "extract all code blocks from the following text and return them in a structured format:",
-  "format_code_prompt": "format the following code for better readability while preserving functionality:"
+  "format_code_prompt": "format the following code for better readability while preserving functionality:",
+  "integrations": {
+    "ollama": {
+      "enabled": true
+    },
+    "githubmodels": {
+      "enabled": false
+    },
+    "openai": {
+      "enabled": false
+    },
+    "githubcopilot": {
+      "enabled": false
+    },
+    "default": "ollama"
+  }
 }
