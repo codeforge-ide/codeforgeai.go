@@ -883,8 +883,3 @@ func setIntegrationEnabled(cfg *config.Config, name string, enabled bool) (bool,
 	}
 	return false, nil
 }
-	default:
-		return false, errors.New("unknown integration: " + name)
-	}
-	return false, nil
-}
