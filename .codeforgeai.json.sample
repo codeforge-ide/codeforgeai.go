@@ -36,5 +36,6 @@
       "enabled": false
     },
     "default": "ollama"
-  }
+  },
+  "github_models_list": ""
 }
