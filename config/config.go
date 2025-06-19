@@ -123,150 +123,151 @@ func LoadConfig(path string) (Config, error) {
 func SaveConfig(path string, cfg Config) error {
 	if path == "" {
 		path = configFilePath()
-	}	return json.NewEncoder(f).Encode(cfg)
+	}
 	dir := filepath.Dir(path)
 	if err := os.MkdirAll(dir, 0755); err != nil {
-		return errgPrompts(path string) (Config, error) {
-	}Config(path)
-	f, err := os.Create(path)f err != nil {
+		return err
+	}
+	f, err := os.Create(path)
 	if err != nil {
 		return err
-	}	changed := false
+	}
 	defer f.Close()
+	return json.NewEncoder(f).Encode(cfg)
+}
 
-func EnsureConfigPrompts(path string) (Config, error) {ery field in Config)
-	cfg, err := LoadConfig(path)odel == "" {
-	if err != nil {cfg.GeneralModel = def.GeneralModel
+func EnsureConfigPrompts(path string) (Config, error) {
+	cfg, err := LoadConfig(path)
+	if err != nil {
 		return cfg, err
 	}
-	changed := falserompt == "" {
-	def := DefaultConfig()cfg.GeneralPrompt = def.GeneralPrompt
+	changed := false
+	def := DefaultConfig()
 
 	// Ensure all fields are set (for every field in Config)
-	if cfg.GeneralModel == "" {l == "" {
-		cfg.GeneralModel = def.GeneralModelcfg.CodeModel = def.CodeModel
+	if cfg.GeneralModel == "" {
+		cfg.GeneralModel = def.GeneralModel
 		changed = true
 	}
-	if cfg.GeneralPrompt == "" {pt == "" {
-		cfg.GeneralPrompt = def.GeneralPromptcfg.CodePrompt = def.CodePrompt
+	if cfg.GeneralPrompt == "" {
+		cfg.GeneralPrompt = def.GeneralPrompt
 		changed = true
 	}
-	if cfg.CodeModel == "" {odelGithub == "" {
-		cfg.CodeModel = def.CodeModelcfg.GeneralModelGithub = def.GeneralModelGithub
+	if cfg.CodeModel == "" {
+		cfg.CodeModel = def.CodeModel
 		changed = true
 	}
-	if cfg.CodePrompt == "" {lGithub == "" {
-		cfg.CodePrompt = def.CodePromptcfg.CodeModelGithub = def.CodeModelGithub
+	if cfg.CodePrompt == "" {
+		cfg.CodePrompt = def.CodePrompt
 		changed = true
 	}
-	if cfg.GeneralModelGithub == "" {yClassificationPrompt == "" {
-		cfg.GeneralModelGithub = def.GeneralModelGithubcfg.DirectoryClassificationPrompt = def.DirectoryClassificationPrompt
+	if cfg.GeneralModelGithub == "" {
+		cfg.GeneralModelGithub = def.GeneralModelGithub
 		changed = true
 	}
-	if cfg.CodeModelGithub == "" {neSeparator == 0 {
-		cfg.CodeModelGithub = def.CodeModelGithubcfg.FormatLineSeparator = def.FormatLineSeparator
+	if cfg.CodeModelGithub == "" {
+		cfg.CodeModelGithub = def.CodeModelGithub
 		changed = true
 	}
-	if cfg.DirectoryClassificationPrompt == "" {rompt == "" {
-		cfg.DirectoryClassificationPrompt = def.DirectoryClassificationPromptcfg.GitmojiPrompt = def.GitmojiPrompt
+	if cfg.DirectoryClassificationPrompt == "" {
+		cfg.DirectoryClassificationPrompt = def.DirectoryClassificationPrompt
 		changed = true
 	}
-	if cfg.FormatLineSeparator == 0 {ssagePrompt == "" {
-		cfg.FormatLineSeparator = def.FormatLineSeparatorcfg.CommitMessagePrompt = def.CommitMessagePrompt
+	if cfg.FormatLineSeparator == 0 {
+		cfg.FormatLineSeparator = def.FormatLineSeparator
 		changed = true
 	}
-	if cfg.GitmojiPrompt == "" {tunePrompt == "" {
-		cfg.GitmojiPrompt = def.GitmojiPromptcfg.EditFinetunePrompt = def.EditFinetunePrompt
+	if cfg.GitmojiPrompt == "" {
+		cfg.GitmojiPrompt = def.GitmojiPrompt
 		changed = true
 	}
-	if cfg.CommitMessagePrompt == "" {mmand == "" {
-		cfg.CommitMessagePrompt = def.CommitMessagePromptcfg.CodeOrCommand = def.CodeOrCommand
+	if cfg.CommitMessagePrompt == "" {
+		cfg.CommitMessagePrompt = def.CommitMessagePrompt
 		changed = true
 	}
-	if cfg.EditFinetunePrompt == "" {gentPrompt == "" {
-		cfg.EditFinetunePrompt = def.EditFinetunePromptcfg.CommandAgentPrompt = def.CommandAgentPrompt
+	if cfg.EditFinetunePrompt == "" {
+		cfg.EditFinetunePrompt = def.EditFinetunePrompt
 		changed = true
 	}
-	if cfg.CodeOrCommand == "" {netunePrompt == "" {
-		cfg.CodeOrCommand = def.CodeOrCommandcfg.PromptFinetunePrompt = def.PromptFinetunePrompt
+	if cfg.CodeOrCommand == "" {
+		cfg.CodeOrCommand = def.CodeOrCommand
 		changed = true
 	}
-	if cfg.CommandAgentPrompt == "" {ClassificationPrompt == "" {
-		cfg.CommandAgentPrompt = def.CommandAgentPromptcfg.LanguageClassificationPrompt = def.LanguageClassificationPrompt
+	if cfg.CommandAgentPrompt == "" {
+		cfg.CommandAgentPrompt = def.CommandAgentPrompt
 		changed = true
 	}
-	if cfg.PromptFinetunePrompt == "" {mmaryPrompt == "" {
-		cfg.PromptFinetunePrompt = def.PromptFinetunePromptcfg.ReadmeSummaryPrompt = def.ReadmeSummaryPrompt
+	if cfg.PromptFinetunePrompt == "" {
+		cfg.PromptFinetunePrompt = def.PromptFinetunePrompt
 		changed = true
 	}
-	if cfg.LanguageClassificationPrompt == "" {FileClassification == "" {
-		cfg.LanguageClassificationPrompt = def.LanguageClassificationPromptcfg.SpecificFileClassification = def.SpecificFileClassification
+	if cfg.LanguageClassificationPrompt == "" {
+		cfg.LanguageClassificationPrompt = def.LanguageClassificationPrompt
 		changed = true
 	}
-	if cfg.ReadmeSummaryPrompt == "" {odePrompt == "" {
-		cfg.ReadmeSummaryPrompt = def.ReadmeSummaryPromptcfg.ImproveCodePrompt = def.ImproveCodePrompt
+	if cfg.ReadmeSummaryPrompt == "" {
+		cfg.ReadmeSummaryPrompt = def.ReadmeSummaryPrompt
 		changed = true
 	}
-	if cfg.SpecificFileClassification == "" {odePrompt == "" {
-		cfg.SpecificFileClassification = def.SpecificFileClassificationcfg.ExplainCodePrompt = def.ExplainCodePrompt
+	if cfg.SpecificFileClassification == "" {
+		cfg.SpecificFileClassification = def.SpecificFileClassification
 		changed = true
 	}
-	if cfg.ImproveCodePrompt == "" {onPrompt == "" {
-		cfg.ImproveCodePrompt = def.ImproveCodePromptcfg.SuggestionPrompt = def.SuggestionPrompt
+	if cfg.ImproveCodePrompt == "" {
+		cfg.ImproveCodePrompt = def.ImproveCodePrompt
 		changed = true
 	}
-	if cfg.ExplainCodePrompt == "" {odeBlocksPrompt == "" {
-		cfg.ExplainCodePrompt = def.ExplainCodePromptcfg.ExtractCodeBlocksPrompt = def.ExtractCodeBlocksPrompt
+	if cfg.ExplainCodePrompt == "" {
+		cfg.ExplainCodePrompt = def.ExplainCodePrompt
 		changed = true
 	}
-	if cfg.SuggestionPrompt == "" {dePrompt == "" {
-		cfg.SuggestionPrompt = def.SuggestionPromptcfg.FormatCodePrompt = def.FormatCodePrompt
+	if cfg.SuggestionPrompt == "" {
+		cfg.SuggestionPrompt = def.SuggestionPrompt
 		changed = true
 	}
-	if cfg.ExtractCodeBlocksPrompt == "" {sent and complete
-		cfg.ExtractCodeBlocksPrompt = def.ExtractCodeBlocksPromptions.Default == "" {
-		changed = truecfg.Integrations = def.Integrations
+	if cfg.ExtractCodeBlocksPrompt == "" {
+		cfg.ExtractCodeBlocksPrompt = def.ExtractCodeBlocksPrompt
+		changed = true
 	}
 	if cfg.FormatCodePrompt == "" {
 		cfg.FormatCodePrompt = def.FormatCodePrompt
-		changed = truetions.Ollama == IntegrationEntry{}) {
-	}cfg.Integrations.Ollama = def.Integrations.Ollama
+		changed = true
+	}
+
 	// Ensure integrations config is present and complete
 	if cfg.Integrations.Default == "" {
-		cfg.Integrations = def.Integrationstions.GithubModels == IntegrationEntry{}) {
-		changed = truecfg.Integrations.GithubModels = def.Integrations.GithubModels
+		cfg.Integrations = def.Integrations
+		changed = true
 	}
 	// Ensure all sub-integrations are present
-	if (cfg.Integrations.Ollama == IntegrationEntry{}) {tions.OpenAPI == IntegrationEntry{}) {
-		cfg.Integrations.Ollama = def.Integrations.Ollamacfg.Integrations.OpenAPI = def.Integrations.OpenAPI
+	if (cfg.Integrations.Ollama == IntegrationEntry{}) {
+		cfg.Integrations.Ollama = def.Integrations.Ollama
 		changed = true
 	}
-	if (cfg.Integrations.GithubModels == IntegrationEntry{}) {tions.GithubCopilot == IntegrationEntry{}) {
-		cfg.Integrations.GithubModels = def.Integrations.GithubModelscfg.Integrations.GithubCopilot = def.Integrations.GithubCopilot
+	if (cfg.Integrations.GithubModels == IntegrationEntry{}) {
+		cfg.Integrations.GithubModels = def.Integrations.GithubModels
 		changed = true
-	}	}
-	if (cfg.Integrations.OpenAPI == IntegrationEntry{}) {bool, so no need to check for empty string
+	}
+	if (cfg.Integrations.OpenAPI == IntegrationEntry{}) {
 		cfg.Integrations.OpenAPI = def.Integrations.OpenAPI
-		changed = truef cfg.GithubModelsList == "" {
-	}lsList = def.GithubModelsList
-	if (cfg.Integrations.GithubCopilot == IntegrationEntry{}) {	changed = true
-		cfg.Integrations.GithubCopilot = def.Integrations.GithubCopilot	}
 		changed = true
 	}
+	if (cfg.Integrations.GithubCopilot == IntegrationEntry{}) {
+		cfg.Integrations.GithubCopilot = def.Integrations.GithubCopilot
+		changed = true
+	}
+
 	// Debug is bool, so no need to check for empty string
+	if cfg.GithubModelsList == "" {
+		cfg.GithubModelsList = def.GithubModelsList
+		changed = true
+	}
+
+	if changed {
+		SaveConfig(path, cfg)
+	}
+	return cfg, nil
 }
-	if changed {	return cfg, nil
-
-
-
-
-
-
-
-
-
-
-}	fmt.Println(string(b))	b, _ := json.MarshalIndent(cfg, "", "  ")func PrintConfig(cfg Config) {}	return cfg, nil	}		SaveConfig(path, cfg)}
 
 func PrintConfig(cfg Config) {
 	b, _ := json.MarshalIndent(cfg, "", "  ")
