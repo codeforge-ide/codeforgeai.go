@@ -4,7 +4,10 @@
 package io
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
+	"net/http"
 
 	"github.com/openai/openai-go"
 )
@@ -40,6 +43,43 @@ func (m *IOModel) ChatCompletion(ctx context.Context, messages []openai.ChatComp
 		return "", err
 	}
 	return resp.Choices[0].Message.Content, nil
+}
+
+// EmbeddingRequest and EmbeddingResponse for IO API
+type EmbeddingRequest struct {
+	Model string   `json:"model"`
+	Input []string `json:"input"`
+}
+type EmbeddingResponse struct {
+	Data []struct {
+		Embedding []float64 `json:"embedding"`
+		Index     int       `json:"index"`
+	} `json:"data"`
+}
+
+// GetEmbeddings fetches embeddings for input texts.
+func (m *IOModel) GetEmbeddings(ctx context.Context, input []string) ([][]float64, error) {
+	reqBody, _ := json.Marshal(EmbeddingRequest{Model: m.config.Model, Input: input})
+	req, err := http.NewRequestWithContext(ctx, "POST", m.config.BaseURL+"/embeddings", bytes.NewReader(reqBody))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Authorization", "Bearer "+m.config.APIKey)
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+	var result EmbeddingResponse
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		return nil, err
+	}
+	var embeddings [][]float64
+	for _, d := range result.Data {
+		embeddings = append(embeddings, d.Embedding)
+	}
+	return embeddings, nil
 }
 
 // Add more model API methods as needed (embeddings, etc.)

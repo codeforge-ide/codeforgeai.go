@@ -4,6 +4,33 @@
 
 A blazingly fast, modular, and extensible AI-powered code analysis engine built in Go. Whether you're building the next DeFi protocol, contributing to open source, or shipping production applications, CodeForgeAI.go supercharges your development workflow with intelligent automation and real-time insights.
 
+## 📦 Usage
+
+Install the CLI tool with:
+
+```bash
+go install github.com/codeforge-ide/codeforgeai.go@latest
+```
+
+For full command line usage and examples, see [`USAGE.md`](./USAGE.md).
+
+## 🔌 Integrations
+
+### 🌐 io.net Integration
+Connect to the IO Intelligence API for advanced agent workflows and model completions, supporting multi-agent orchestration, embeddings, and OpenAI-compatible endpoints. Use this for scalable, production-grade AI tasks with flexible model selection and quota management.
+
+### 🌌 Astrolescent DeFi Integration
+Get real-time DeFi data, including token prices, swap quotes, and APY analytics, directly in your AI workflows. Ideal for blockchain and DeFi developers needing live market intelligence and trading automation.
+
+### 🐙 GitHub Copilot Integration
+Enhance Copilot with full project context, smart code analysis, and auto-generated commit messages. Boost code review and test generation with AI-powered suggestions tailored to your codebase.
+
+### 🦙 Ollama Integration
+Run local LLMs with Ollama for fast, private code analysis and automation. Easily switch models and providers for flexible, developer-first AI workflows.
+
+### 🧠 OpenAI Integration
+Leverage OpenAI models for high-quality completions, code review, and documentation. Integrate seamlessly with other providers and MCP servers for context-rich automation.
+
 ## ✨ Why CodeForgeAI.go?
 
 - 🧠 **Multi-LLM Intelligence**: Seamlessly integrate with Ollama, OpenAI, GitHub Copilot, and more
@@ -11,60 +38,6 @@ A blazingly fast, modular, and extensible AI-powered code analysis engine built 
 - 🔌 **Modular Architecture**: Plug-and-play integrations that scale with your needs
 - 🌐 **MCP-Powered**: Real-time connection to external data sources and blockchain networks
 - 🛠️ **Developer-First**: Built by developers, for developers who demand excellence
-
-## 🌟 Model Context Protocol (MCP) Integrations
-
-CodeForgeAI.go leverages the cutting-edge **Model Context Protocol** to connect your AI workflows with real-world data and services. No more isolated AI—get live, actionable intelligence.
-
-### 🌌 Astrolescent DeFi Integration
-
-**Perfect for Blockchain & DeFi Developers**
-
-Connect your AI directly to the Radix DeFi ecosystem through our Astrolescent MCP server integration:
-
-- 💸 **Live Token Prices**: Get real-time $ASTRL, XRD, and token prices in your prompts
-- 🔄 **Smart Swap Quotes**: AI-powered trading analysis with live DEX data
-- 📈 **Yield Intelligence**: Real-time APY data for staking and liquidity provision
-- 🌉 **Cross-Chain Insights**: Bridge data and multi-chain analytics
-- 🤖 **AI Trading Assistant**: Build intelligent DeFi bots and analysis tools
-
-#### Astro Subcommand Usage
-
-```bash
-codeforgeai astro price
-codeforgeai astro quote [operation] [token] [amount] [account]
-codeforgeai astro apy
-codeforgeai astro analyze [type]
-codeforgeai astro calculator [amount] [days]
-codeforgeai astro trading-advice [from_token] [to_token] [amount]
-codeforgeai astro demo
-```
-
-- `operation`: `buy`, `sell`, or `swap`
-- `type`: `staking-vs-lp`, `market`
-
-### 🐙 GitHub Copilot and copilot MCP integration
-
-Supercharge your GitHub Copilot experience with contextual project intelligence:
-
-- 📊 **Project Context Awareness**: Feed your entire codebase context to Copilot
-- 🔍 **Smart Code Analysis**: Enhanced suggestions based on project patterns
-- 📝 **Intelligent Commit Messages**: Auto-generate meaningful commit descriptions
-- 🧪 **Test Generation**: AI-powered test creation with project context
-
-## 🎯 Perfect For
-
-### 🏗️ Blockchain Developers
-- **Smart Contract Analysis**: AI-powered security audits and optimization
-- **DeFi Protocol Development**: Real-time market data integration
-- **Cross-Chain Development**: Multi-network insights and analytics
-- **Token Economics**: AI-assisted tokenomics modeling and analysis
-
-### 🚀 Modern Development Teams
-- **Code Quality Automation**: Intelligent analysis and suggestions
-- **Documentation Generation**: Auto-generate docs that actually make sense
-- **Legacy Code Migration**: AI-assisted modernization strategies
-- **Performance Optimization**: Smart bottleneck detection and solutions
 
 ## 🏗️ Architecture
 
