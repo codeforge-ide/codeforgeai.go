@@ -1,85 +1,55 @@
-// Package io provides integration with the IO Intelligence Models API using Go.
-// This integration uses github.com/openai/openai-go for API compatibility.
-
 package io
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
-	"github.com/openai/openai-go"
+	"github.com/codeforge-ide/codeforgeai.go/modeliface"
 )
 
-// ModelConfig holds configuration for an IO model.
-type ModelConfig struct {
-	Model   string
-	APIKey  string
-	BaseURL string
+// Model represents an IO.net model.
+type Model struct {
+	ID         string `json:"id"`
+	Object     string `json:"object"`
+	OwnedBy    string `json:"owned_by"`
+	Permission []any  `json:"permission"`
 }
 
-// IOModel wraps the OpenAI client for IO Intelligence model tasks.
-type IOModel struct {
-	client *openai.Client
-	config ModelConfig
-}
-
-// NewIOModel creates a new IOModel instance.
-func NewIOModel(cfg ModelConfig) *IOModel {
-	client := openai.NewClient(cfg.APIKey)
-	client.BaseURL = cfg.BaseURL
-	return &IOModel{client: client, config: cfg}
-}
-
-// ChatCompletion runs a chat completion using the model.
-func (m *IOModel) ChatCompletion(ctx context.Context, messages []openai.ChatCompletionMessage, maxTokens int) (string, error) {
-	resp, err := m.client.CreateChatCompletion(ctx, &openai.ChatCompletionRequest{
-		Model:     m.config.Model,
-		Messages:  messages,
-		MaxTokens: maxTokens,
-	})
-	if err != nil {
-		return "", err
-	}
-	return resp.Choices[0].Message.Content, nil
-}
-
-// EmbeddingRequest and EmbeddingResponse for IO API
-type EmbeddingRequest struct {
-	Model string   `json:"model"`
-	Input []string `json:"input"`
-}
-type EmbeddingResponse struct {
-	Data []struct {
-		Embedding []float64 `json:"embedding"`
-		Index     int       `json:"index"`
-	} `json:"data"`
-}
-
-// GetEmbeddings fetches embeddings for input texts.
-func (m *IOModel) GetEmbeddings(ctx context.Context, input []string) ([][]float64, error) {
-	reqBody, _ := json.Marshal(EmbeddingRequest{Model: m.config.Model, Input: input})
-	req, err := http.NewRequestWithContext(ctx, "POST", m.config.BaseURL+"/embeddings", bytes.NewReader(reqBody))
+// ListModels returns a list of available models.
+func (i *IO) ListModels(ctx context.Context) ([]modeliface.Model, error) {
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/v1/models", i.client.BaseURL), nil)
 	if err != nil {
 		return nil, err
 	}
-	req.Header.Set("Authorization", "Bearer "+m.config.APIKey)
-	req.Header.Set("Content-Type", "application/json")
-	resp, err := http.DefaultClient.Do(req)
+
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", i.client.APIKey))
+
+	resp, err := i.client.HTTPClient.Do(req)
 	if err != nil {
 		return nil, err
 	}
 	defer resp.Body.Close()
-	var result EmbeddingResponse
-	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+
+	if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("failed to get models: %s", resp.Status)
+	}
+
+	var models struct {
+		Data []Model `json:"data"`
+	}
+	if err := json.NewDecoder(resp.Body).Decode(&models); err != nil {
 		return nil, err
 	}
-	var embeddings [][]float64
-	for _, d := range result.Data {
-		embeddings = append(embeddings, d.Embedding)
-	}
-	return embeddings, nil
-}
 
-// Add more model API methods as needed (embeddings, etc.)
+	var result []modeliface.Model
+	for _, m := range models.Data {
+		result = append(result, modeliface.Model{
+			ID:      m.ID,
+			OwnedBy: m.OwnedBy,
+		})
+	}
+
+	return result, nil
+}
