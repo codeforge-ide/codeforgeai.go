@@ -45,7 +45,39 @@ type Config struct {
 	FormatCodePrompt              string             `json:"format_code_prompt"`
 	Integrations                  IntegrationsConfig `json:"integrations"`
 	GithubModelsList              string             `json:"github_models_list"`
-	// Optionally add GithubToken string `json:"github_token"` to Config struct if you want to support it from config.
+	CopilotToken                  string             `json:"copilot_token"`
+}
+
+// Set stores a key-value pair in the config file (only supports CopilotToken for now)
+func Set(key, value string) error {
+	path := configFilePath()
+	cfg, err := LoadConfig(path)
+	if err != nil {
+		return err
+	}
+	switch key {
+	case "copilot_token":
+		cfg.CopilotToken = value
+	default:
+		return fmt.Errorf("unsupported config key: %s", key)
+	}
+	return SaveConfig(path, cfg)
+}
+
+// Delete removes a key from the config file (only supports CopilotToken for now)
+func Delete(key string) error {
+	path := configFilePath()
+	cfg, err := LoadConfig(path)
+	if err != nil {
+		return err
+	}
+	switch key {
+	case "copilot_token":
+		cfg.CopilotToken = ""
+	default:
+		return fmt.Errorf("unsupported config key: %s", key)
+	}
+	return SaveConfig(path, cfg)
 }
 
 func DefaultConfig() Config {

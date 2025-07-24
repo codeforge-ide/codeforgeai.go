@@ -10,4 +10,5 @@ func (c *CopilotModel) SendRequest(prompt string, config interface{}) (string, e
 	// TODO: Implement Copilot LSP protocol
 	return "", nil
 }
+
 var _ models.Model = (*CopilotModel)(nil)

@@ -118,44 +118,8 @@ func init() {
 	}
 	rootCmd.AddCommand(commitMsgCmd)
 
-	// github (with copilot subcommands)
-	githubCmd := &cobra.Command{
-		Use:   "github",
-		Short: "GitHub Copilot integration",
-	}
-	copilotCmd := &cobra.Command{
-		Use:   "copilot",
-		Short: "Github copilot integration",
-	}
-	copilotCmd.AddCommand(&cobra.Command{
-		Use:   "login",
-		Short: "Authenticate with GitHub Copilot",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("GitHub Copilot login (not implemented in Go yet).")
-		},
-	})
-	copilotCmd.AddCommand(&cobra.Command{
-		Use:   "logout",
-		Short: "Logout from GitHub Copilot",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("GitHub Copilot logout (not implemented in Go yet).")
-		},
-	})
-	copilotCmd.AddCommand(&cobra.Command{
-		Use:   "status",
-		Short: "Check GitHub Copilot status",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("GitHub Copilot status (not implemented in Go yet).")
-		},
-	})
-	copilotCmd.AddCommand(&cobra.Command{
-		Use:   "lsp",
-		Short: "install copilot language server globally",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Installing Copilot language server (not implemented in Go yet).")
-		},
-	})
-	githubCmd.AddCommand(copilotCmd)
+	// copilot command
+	rootCmd.AddCommand(copilotCmd)
 
 	githubModelsCmd := &cobra.Command{
 		Use:   "github-models",
@@ -881,6 +845,13 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 
 	rootCmd.AddCommand(enableCmd)
 	rootCmd.AddCommand(disableCmd)
+
+	// Opencode integration
+	opencodeCmd := &cobra.Command{
+		Use:   "opencode",
+		Short: "Opencode AI integration commands",
+	}
+	rootCmd.AddCommand(opencodeCmd)
 }
 
 // Helper function for base64 encoding
