@@ -852,6 +852,81 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 		Short: "Opencode AI integration commands",
 	}
 	rootCmd.AddCommand(opencodeCmd)
+
+	ioCmd := &cobra.Command{
+		Use:   "io",
+		Short: "Interact with IO.net API",
+	}
+	rootCmd.AddCommand(ioCmd)
+
+	ioListModelsCmd := &cobra.Command{
+		Use:   "list-models",
+		Short: "List available IO.net models",
+		Run: func(cmd *cobra.Command, args []string) {
+			token := os.Getenv("IO_NET_API_KEY")
+			if token == "" {
+				fmt.Println("IO_NET_API_KEY environment variable is required.")
+				return
+			}
+			client := io.New(token)
+			models, err := client.ListModels(context.Background())
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			for _, model := range models {
+				fmt.Printf("- %s\n", model.ID)
+			}
+		},
+	}
+	ioCmd.AddCommand(ioListModelsCmd)
+
+	ioListAgentsCmd := &cobra.Command{
+		Use:   "list-agents",
+		Short: "List available IO.net agents",
+		Run: func(cmd *cobra.Command, args []string) {
+			token := os.Getenv("IO_NET_API_KEY")
+			if token == "" {
+				fmt.Println("IO_NET_API_KEY environment variable is required.")
+				return
+			}
+			client := io.New(token)
+			agents, err := client.ListAgents(context.Background())
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			for _, agent := range agents {
+				fmt.Printf("- %s: %s\n", agent.ID, agent.Name)
+			}
+		},
+	}
+	ioCmd.AddCommand(ioListAgentsCmd)
+
+	ioRunAgentCmd := &cobra.Command{
+		Use:   "run-agent [agent-id] [prompt]",
+		Short: "Run an IO.net agent",
+		Args:  cobra.ExactArgs(2),
+		Run: func(cmd *cobra.Command, args []string) {
+			token := os.Getenv("IO_NET_API_KEY")
+			if token == "" {
+				fmt.Println("IO_NET_API_KEY environment variable is required.")
+				return
+			}
+			client := io.New(token)
+			req := &io.AgentRequest{
+				Model:   "gpt-3.5-turbo",
+				Content: args[1],
+			}
+			resp, err := client.RunAgent(context.Background(), args[0], req)
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			fmt.Println(resp.Content)
+		},
+	}
+	ioCmd.AddCommand(ioRunAgentCmd)
 }
 
 // Helper function for base64 encoding
@@ -880,6 +955,11 @@ func setIntegrationEnabled(cfg *config.Config, name string, enabled bool) (bool,
 	case "githubcopilot":
 		if cfg.Integrations.GithubCopilot.Enabled != enabled {
 			cfg.Integrations.GithubCopilot.Enabled = enabled
+			return true, nil
+		}
+	case "io":
+		if cfg.Integrations.IO.Enabled != enabled {
+			cfg.Integrations.IO.Enabled = enabled
 			return true, nil
 		}
 	default:
