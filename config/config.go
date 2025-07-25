@@ -12,6 +12,7 @@ type IntegrationsConfig struct {
 	GithubModels  IntegrationEntry `json:"githubmodels"`
 	OpenAPI       IntegrationEntry `json:"openapi"`
 	GithubCopilot IntegrationEntry `json:"githubcopilot"`
+	IO            IntegrationEntry `json:"io"`
 	Default       string           `json:"default"`
 }
 
@@ -110,6 +111,7 @@ func DefaultConfig() Config {
 			GithubModels:  IntegrationEntry{Enabled: false},
 			OpenAPI:       IntegrationEntry{Enabled: false},
 			GithubCopilot: IntegrationEntry{Enabled: false},
+			IO:            IntegrationEntry{Enabled: false},
 			Default:       "ollama",
 		},
 		GithubModelsList: "",
@@ -286,6 +288,10 @@ func EnsureConfigPrompts(path string) (Config, error) {
 	}
 	if (cfg.Integrations.GithubCopilot == IntegrationEntry{}) {
 		cfg.Integrations.GithubCopilot = def.Integrations.GithubCopilot
+		changed = true
+	}
+	if (cfg.Integrations.IO == IntegrationEntry{}) {
+		cfg.Integrations.IO = def.Integrations.IO
 		changed = true
 	}
 

@@ -17,6 +17,12 @@ type Model struct {
 	Permission []any  `json:"permission"`
 }
 
+// Ensure Model implements modeliface.Model
+func (m *Model) SendRequest(prompt string, config interface{}) (string, error) {
+	// Placeholder implementation
+	return "IOModel response", nil
+}
+
 // ListModels returns a list of available models.
 func (i *IO) ListModels(ctx context.Context) ([]modeliface.Model, error) {
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/v1/models", i.client.BaseURL), nil)
@@ -45,7 +51,7 @@ func (i *IO) ListModels(ctx context.Context) ([]modeliface.Model, error) {
 
 	var result []modeliface.Model
 	for _, m := range models.Data {
-		result = append(result, modeliface.Model{
+		result = append(result, &Model{
 			ID:      m.ID,
 			OwnedBy: m.OwnedBy,
 		})

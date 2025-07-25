@@ -6,8 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/codeforge-ide/codeforgeai.go/mcp"
-	"github.com/codeforge-ide/codeforgeai.go/mcp/astro"
+	astro "github.com/codeforge-ide/codeforgeai.go/mcp/astro"
 )
 
 // DeFiAnalyzer provides AI-powered DeFi analysis using Astrolescent MCP data
@@ -160,7 +159,7 @@ func (d *DeFiAnalyzer) AnalyzeBridgeOpportunity(ctx context.Context, fromChain, 
 
 // Helper methods
 
-func (d *DeFiAnalyzer) getMarketSentiment(price *mcp.MCPResponse) string {
+func (d *DeFiAnalyzer) getMarketSentiment(price *astro.MCPResponse) string {
 	if raw, ok := price.Raw.(map[string]interface{}); ok {
 		if change24h, ok := raw["change_24h"].(float64); ok {
 			switch {
@@ -178,7 +177,7 @@ func (d *DeFiAnalyzer) getMarketSentiment(price *mcp.MCPResponse) string {
 	return "neutral"
 }
 
-func (d *DeFiAnalyzer) extractStakingAPY(apy *mcp.MCPResponse) float64 {
+func (d *DeFiAnalyzer) extractStakingAPY(apy *astro.MCPResponse) float64 {
 	if raw, ok := apy.Raw.(map[string]interface{}); ok {
 		if stakingAPY, ok := raw["staking_apy"].(float64); ok {
 			return stakingAPY
@@ -195,15 +194,15 @@ func (d *DeFiAnalyzer) calculateProjectedReturns(amount string, apy float64, day
 		dailyRate*100, projectedRewards, apy, days, (projectedRewards/amountFloat)*100, projectedRewards*0.083)
 }
 
-func (d *DeFiAnalyzer) generateTradingInsights(quote, price *mcp.MCPResponse) string {
+func (d *DeFiAnalyzer) generateTradingInsights(quote, price *astro.MCPResponse) string {
 	return "Market analysis based on current data"
 }
 
-func (d *DeFiAnalyzer) generateExecutionStrategy(amount string, quote *mcp.MCPResponse) string {
+func (d *DeFiAnalyzer) generateExecutionStrategy(amount string, quote *astro.MCPResponse) string {
 	return "Recommended execution approach"
 }
 
-func (d *DeFiAnalyzer) assessTradingRisk(quote, price *mcp.MCPResponse) string {
+func (d *DeFiAnalyzer) assessTradingRisk(quote, price *astro.MCPResponse) string {
 	return "Risk assessment completed"
 }
 
