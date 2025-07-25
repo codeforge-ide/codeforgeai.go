@@ -16,6 +16,8 @@ import (
 	"github.com/spf13/cobra"
 )
 
+import io_integration "github.com/codeforge-ide/codeforgeai.go/integrations/io"
+
 var (
 	verbose     bool
 	veryVerbose bool
@@ -868,14 +870,14 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 				fmt.Println("IO_NET_API_KEY environment variable is required.")
 				return
 			}
-			client := io.New(token)
+			client := io_integration.New(token)
 			models, err := client.ListModels(context.Background())
 			if err != nil {
 				fmt.Println("Error:", err)
 				return
 			}
 			for _, model := range models {
-				fmt.Printf("- %s\n", model.ID)
+				fmt.Printf("- %v\n", model)
 			}
 		},
 	}
@@ -890,7 +892,7 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 				fmt.Println("IO_NET_API_KEY environment variable is required.")
 				return
 			}
-			client := io.New(token)
+			client := io_integration.New(token)
 			agents, err := client.ListAgents(context.Background())
 			if err != nil {
 				fmt.Println("Error:", err)
@@ -913,8 +915,8 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 				fmt.Println("IO_NET_API_KEY environment variable is required.")
 				return
 			}
-			client := io.New(token)
-			req := &io.AgentRequest{
+			client := io_integration.New(token)
+			req := &io_integration.AgentRequest{
 				Model:   "gpt-3.5-turbo",
 				Content: args[1],
 			}
