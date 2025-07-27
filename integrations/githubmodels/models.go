@@ -46,6 +46,7 @@ type Client struct {
 	Model    string
 	Token    string
 	Timeout  time.Duration
+	loggedIn bool
 }
 
 // NewClient creates a new GitHub Models client.
@@ -66,6 +67,7 @@ func NewClient(token string, model string, endpoint string) *Client {
 		Model:    model,
 		Token:    token,
 		Timeout:  timeout,
+		loggedIn: false,
 	}
 }
 
@@ -218,4 +220,26 @@ func (c *Client) ImagePrompt(prompt string, imageB64 string) (string, error) {
 func (c *Client) SendRequest(prompt string, config interface{}) (string, error) {
 	// Use SimplePrompt for general, or allow config to select other helpers
 	return c.SimplePrompt(prompt)
+}
+
+// --- Agent interface implementation ---
+func (c *Client) Name() string {
+	return "githubmodels"
+}
+
+func (c *Client) Login() error {
+	if c.Token != "" {
+		c.loggedIn = true
+		return nil
+	}
+	return errors.New("missing GitHub Models API token")
+}
+
+func (c *Client) Logout() error {
+	c.loggedIn = false
+	return nil
+}
+
+func (c *Client) IsAuthenticated() bool {
+	return c.loggedIn
 }
