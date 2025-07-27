@@ -649,16 +649,14 @@ Analysis types:
 				fmt.Println("🌌 Comprehensive Radix DeFi Market Analysis")
 				fmt.Println(strings.Repeat("=", 50))
 				fmt.Println(price.Text)
-				fmt.Println("\n" + apy.Text)
+				fmt.Println(apy.Text)
 
-				fmt.Println(`
-🧠 AI Market Insights:
+				fmt.Println(`🧠 AI Market Insights:
 - Trend analysis based on 24h/7d price movements
 - Yield optimization recommendations
 - Risk assessment for current market conditions
 - Strategic entry/exit point analysis
-- Cross-DEX arbitrage opportunities
-`)
+- Cross-DEX arbitrage opportunities`)
 			default:
 				fmt.Printf("Unknown analysis type: %s\n", analysisType)
 				fmt.Println("Available types: staking-vs-lp, market")
