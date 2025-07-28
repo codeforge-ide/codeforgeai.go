@@ -146,8 +146,33 @@ var switchCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := args[0]
-		fmt.Printf("[stub] Switching active provider to: %s\n", provider)
-		// TODO: Set the active provider in config/agent manager
+		// Validate provider name
+		validProviders := map[string]bool{
+			"ollama":        true,
+			"githubmodels":  true,
+			"openapi":       true,
+			"githubcopilot": true,
+			"io":            true,
+		}
+		if !validProviders[provider] {
+			fmt.Printf("Unknown provider: %s\n", provider)
+			fmt.Println("Valid providers: ollama, githubmodels, openapi, githubcopilot, io")
+			return
+		}
+
+		cfgPath := ""
+		cfg, err := config.LoadConfig(cfgPath)
+		if err != nil {
+			fmt.Printf("Error loading config: %v\n", err)
+			return
+		}
+		cfg.Integrations.Default = provider
+		err = config.SaveConfig(cfgPath, cfg)
+		if err != nil {
+			fmt.Printf("Error saving config: %v\n", err)
+			return
+		}
+		fmt.Printf("Active provider switched to: %s\n", provider)
 	},
 }
 
