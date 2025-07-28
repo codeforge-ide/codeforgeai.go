@@ -1,6 +1,6 @@
 # AGENTS.md
 
-1. after each changes add all changes using git add . only and gemerate a single line, single sentence concise but understandable commit message of the cjange made.
+1. after each changes add all changes using git add . only and gemerate a single line, single sentence concise but understandable commit message of the cjange made. also push
  don't um don't addum don't add any details about the commit author or the commits don't add new lines just the commit message a single sentence
  ensure that in the process of adding a feature you do not break any part of the core code base 
  ensure that everything every feature is been wired up and everything is a closed source code so that every feature is interactive in a closed system of the entire source code so that all the sub commands are wired up not um duplicating functionality everything is wired up in a centralized um system of um so commands command which everything work in together in a very very close loop of um interchanging um interactions between the call functionalities and the um authentication methods egola um everything is wired up replaceably and more lally can be in that changed can be used and still power the coffee with us every single of the um entire tool
