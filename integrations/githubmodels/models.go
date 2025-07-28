@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/codeforge-ide/codeforgeai.go/modeliface"
+	"github.com/spf13/cobra"
 )
 
 const (
@@ -226,3 +227,45 @@ func (c *Client) SendRequest(prompt string, config interface{}) (string, error) 
 
 // --- Agent interface implementation ---
 // Name, Login, Logout, IsAuthenticated are now provided by BaseAgent.
+
+// --- Registry and CLI wiring ---
+
+func githubModelsRootCommand() *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "github-models",
+		Short: "Interact with GitHub Models API",
+	}
+	cmd.AddCommand(&cobra.Command{
+		Use:   "prompt [prompt]",
+		Short: "Send a prompt to GitHub Models",
+		Args:  cobra.MinimumNArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			token := os.Getenv("GITHUB_TOKEN")
+			if token == "" {
+				fmt.Println("GITHUB_TOKEN environment variable is required.")
+				return
+			}
+			client := NewClient(token, "", "")
+			resp, err := client.SimplePrompt(args[0])
+			if err != nil {
+				fmt.Println("Error:", err)
+				return
+			}
+			fmt.Println(resp)
+		},
+	})
+	return cmd
+}
+
+func init() {
+	modeliface.GlobalAgentRegistry.RegisterIntegration(modeliface.IntegrationRegistration{
+		Metadata: modeliface.IntegrationMetadata{
+			Name:        "github-models",
+			Description: "Interact with GitHub Models API for completions, chat, and more.",
+			ConfigKeys:  []string{"GITHUB_TOKEN", "GITHUB_MODELS_MODEL", "GITHUB_MODELS_ENDPOINT"},
+			Secrets:     []string{"GITHUB_TOKEN"},
+			Commands:    []string{"prompt"},
+		},
+		CommandFactory: githubModelsRootCommand,
+	})
+}

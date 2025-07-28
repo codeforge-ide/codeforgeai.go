@@ -1,3 +1,4 @@
+
 # 🚀 CodeForgeAI.go
 
 > **The Ultimate AI/MCP Powered Code Analysis & Automation Toolkit for Modern Developers**
@@ -15,6 +16,8 @@ go install github.com/codeforge-ide/codeforgeai.go@latest
 For full command line usage and examples, see [`USAGE.md`](./USAGE.md).
 
 ## 🔌 Integrations
+
+All integrations are now plug-and-play: each integration self-registers with a central registry at startup, and the CLI automatically discovers and wires up all available integrations. To add a new integration, simply implement the registration interface and provide a CLI command factory—no manual CLI wiring required.
 
 ### 🌐 io.net Integration
 Connect to the IO Intelligence API for advanced agent workflows and model completions, supporting multi-agent orchestration, embeddings, and OpenAI-compatible endpoints. Use this for scalable, production-grade AI tasks with flexible model selection and quota management.
@@ -35,7 +38,7 @@ Leverage OpenAI models for high-quality completions, code review, and documentat
 
 - 🧠 **Multi-LLM Intelligence**: Seamlessly integrate with Ollama, OpenAI, GitHub Copilot, and more
 - ⚡ **Lightning Fast**: Go-native performance for instant analysis and feedback
-- 🔌 **Modular Architecture**: Plug-and-play integrations that scale with your needs
+- 🔌 **Modular Architecture**: Plug-and-play integrations that scale with your needs. Integrations self-register with a central registry, and the CLI auto-discovers and wires up all available integrations at startup for seamless extensibility.
 - 🌐 **MCP-Powered**: Real-time connection to external data sources and blockchain networks
 - 🛠️ **Developer-First**: Built by developers, for developers who demand excellence
 

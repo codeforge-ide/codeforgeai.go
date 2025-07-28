@@ -29,7 +29,11 @@ go.work.sum
 
 # Editor/IDE
 # .idea/
-# .vscode/
+.vscode/
+.idx/
+payload.json
+codeforgeai
+
 
 docx/
 codeforgeai

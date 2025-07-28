@@ -143,6 +143,15 @@ codeforgeai suggestion --file [file_path] --line [line_number] --string "code sn
 
 ## Integration Commands
 
+All integrations are now registered dynamically. To see all available integrations and their commands, run:
+
+```bash
+codeforgeai --help
+```
+
+Each integration provides its own subcommands, which are auto-discovered at startup. To add a new integration, implement the registration interface and provide a CLI command factory.
+
+
 ### `github`
 
 GitHub Copilot integration.

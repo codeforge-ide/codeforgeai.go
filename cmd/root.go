@@ -13,6 +13,7 @@ import (
 	"github.com/codeforge-ide/codeforgeai.go/engine"
 	"github.com/codeforge-ide/codeforgeai.go/integrations/astrolescent"
 	"github.com/codeforge-ide/codeforgeai.go/integrations/githubmodels"
+	"github.com/codeforge-ide/codeforgeai.go/modeliface"
 	"github.com/codeforge-ide/codeforgeai.go/secrets"
 	"github.com/spf13/cobra"
 )
@@ -56,6 +57,11 @@ func runGitCommand(args []string) error {
 // ---- END UTILS ----
 
 func init() {
+	// Dynamically add all registered integrations as CLI commands
+	for _, reg := range modeliface.GlobalAgentRegistry.ListIntegrations() {
+		rootCmd.AddCommand(reg.CommandFactory())
+	}
+
 	// push command
 	pushCmd := &cobra.Command{
 		Use:   "push",
