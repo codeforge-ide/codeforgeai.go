@@ -30,4 +30,4 @@
 19. **Directory Structure:** Follow the modular structure as described in `README.md`.
 20. **Contribution:** Follow these guidelines for all PRs and code reviews.
 21. NEVER edit .gitignore
-22. go through opencode/ project directory. it is an existent tool similar to the current project (codeforgeai.go) and we will be taking cues and architectural logics from it especially in the auth management system, and agent tooling (but not to affect our current codeforgeai.go architecture, but to enhance it)
+22. go through opencode/ project directory. it is an existent tool similar to the current project (codeforgeai.go) and we will be taking cues and architectural logics from it especially in the auth management system, and agent tooling (but not to affect our current codeforgeai.go architecture, but to enhance it). do NOT under any circumstances, modify any of the opencode/ source code. we are simply using it as a reference for building codeforgeai auth/agent system.
