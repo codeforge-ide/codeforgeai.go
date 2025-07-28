@@ -8,6 +8,7 @@ import (
 	"os/exec"
 	"strings"
 
+	"encoding/json"
 	"github.com/codeforge-ide/codeforgeai.go/config"
 	"github.com/codeforge-ide/codeforgeai.go/directory"
 	"github.com/codeforge-ide/codeforgeai.go/engine"
@@ -16,6 +17,7 @@ import (
 	"github.com/codeforge-ide/codeforgeai.go/modeliface"
 	"github.com/codeforge-ide/codeforgeai.go/secrets"
 	"github.com/spf13/cobra"
+	"net/http"
 )
 
 import io_integration "github.com/codeforge-ide/codeforgeai.go/integrations/io"
@@ -61,6 +63,89 @@ func init() {
 	for _, reg := range modeliface.GlobalAgentRegistry.ListIntegrations() {
 		rootCmd.AddCommand(reg.CommandFactory())
 	}
+
+	// --- Integrations Command ---
+	integrationsCmd := &cobra.Command{
+		Use:   "integrations",
+		Short: "Manage and inspect AI integrations and models",
+	}
+
+	integrationsListCmd := &cobra.Command{
+		Use:   "list",
+		Short: "List all available integrations/providers",
+		Run: func(cmd *cobra.Command, args []string) {
+			for _, reg := range modeliface.GlobalAgentRegistry.ListIntegrations() {
+				fmt.Printf("- %s: %s\n", reg.Metadata.Name, reg.Metadata.Description)
+			}
+		},
+	}
+	integrationsCmd.AddCommand(integrationsListCmd)
+
+	integrationsListModelsCmd := &cobra.Command{
+		Use:   "[provider] list-models",
+		Short: "List available models for a provider",
+		Args:  cobra.ExactArgs(2),
+		Run: func(cmd *cobra.Command, args []string) {
+			provider := args[0]
+			switch provider {
+			case "githubcopilot", "copilot":
+				out, err := exec.Command("gh", "copilot", "models", "list").CombinedOutput()
+				if err != nil {
+					fmt.Printf("Error listing Copilot models: %v\n%s\n", err, string(out))
+					return
+				}
+				fmt.Println(strings.TrimSpace(string(out)))
+			case "ollama":
+				endpoint := "http://localhost:11434/api/tags"
+				resp, err := http.Get(endpoint)
+				if err != nil {
+					fmt.Printf("Error connecting to Ollama: %v\n", err)
+					return
+				}
+				defer resp.Body.Close()
+				var tags struct {
+					Models []string `json:"models"`
+				}
+				if err := json.NewDecoder(resp.Body).Decode(&tags); err != nil {
+					fmt.Printf("Error decoding Ollama response: %v\n", err)
+					return
+				}
+				for _, m := range tags.Models {
+					fmt.Println(m)
+				}
+			default:
+				fmt.Printf("Model listing not implemented for provider: %s\n", provider)
+			}
+		},
+	}
+	integrationsCmd.AddCommand(integrationsListModelsCmd)
+
+	integrationsSetModelCmd := &cobra.Command{
+		Use:   "[provider] set-model [model]",
+		Short: "Set the default model for a provider",
+		Args:  cobra.ExactArgs(3),
+		Run: func(cmd *cobra.Command, args []string) {
+			provider := args[0]
+			model := args[2]
+			cfg, _ := config.LoadConfig("")
+			switch provider {
+			case "githubcopilot", "copilot":
+				cfg.CodeModel = model
+				cfg.OllamaModel = model // for compatibility if needed
+				fmt.Printf("Set Copilot model to: %s\n", model)
+			case "ollama":
+				cfg.OllamaModel = model
+				fmt.Printf("Set Ollama model to: %s\n", model)
+			default:
+				fmt.Printf("Model setting not implemented for provider: %s\n", provider)
+				return
+			}
+			config.SaveConfig("", cfg)
+		},
+	}
+	integrationsCmd.AddCommand(integrationsSetModelCmd)
+
+	rootCmd.AddCommand(integrationsCmd)
 
 	// push command
 	pushCmd := &cobra.Command{
