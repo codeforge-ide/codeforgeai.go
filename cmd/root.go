@@ -318,7 +318,7 @@ func init() {
 	}
 	githubModelsCmd.AddCommand(githubModelsTokenLoadCmd)
 
-	rootCmd.AddCommand(githubModelsCmd)
+	// rootCmd.AddCommand(githubModelsCmd) // Removed duplicate registration
 
 	// explain
 	explainCmd := &cobra.Command{
