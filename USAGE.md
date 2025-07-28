@@ -4,6 +4,24 @@ This document provides detailed usage instructions for all available commands an
 
 ---
 
+## CLI Setup (Required for Go Installs)
+
+After running `go install`, ensure your Go bin directory is in your PATH so you can run `codeforgeai.go` from anywhere:
+
+```bash
+export PATH="$PATH:$(go env GOPATH)/bin"
+```
+
+For convenience, you can add an alias:
+
+```bash
+alias codeforgeai='codeforgeai.go'
+```
+
+Add this to your shell profile (e.g., `~/.bashrc`, `~/.zshrc`) to make it permanent.
+
+---
+
 ## Global Options
 
 - `-v`, `--verbose`         Set loglevel to INFO

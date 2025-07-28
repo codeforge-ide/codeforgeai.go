@@ -19,6 +19,23 @@ go install github.com/codeforge-ide/codeforgeai.go@latest
 
 For full command line usage and examples, see [`USAGE.md`](./USAGE.md).
 
+## 🛠️ CLI Setup
+
+After installing, make sure your Go bin directory is in your system PATH so you can run `codeforgeai.go` from anywhere:
+
+```bash
+# Add Go bin to PATH (if not already present)
+export PATH="$PATH:$(go env GOPATH)/bin"
+```
+
+For convenience, you can create a shell alias to use a shorter command:
+
+```bash
+alias codeforgeai='codeforgeai.go'
+```
+
+Add this line to your shell profile (e.g., `~/.bashrc`, `~/.zshrc`) to make it permanent.
+
 ## 🔌 Integrations
 
 All integrations are plug-and-play: each integration self-registers with a central registry at startup, and the CLI auto-discovers and wires up all available integrations. To add a new integration, implement the registration interface and provide a CLI command factory—no manual CLI wiring required.
