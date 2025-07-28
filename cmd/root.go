@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
+	"os/exec"
 	"strings"
 
 	"github.com/codeforge-ide/codeforgeai.go/config"
@@ -40,7 +41,57 @@ func Execute() {
 	}
 }
 
+// runGitCommand runs a git command with the given arguments.
+func runGitCommand(args []string) error {
+	if len(args) == 0 {
+		return fmt.Errorf("no git args provided")
+	}
+	gitArgs := append([]string{"git"}, args...)
+	proc := exec.Command(gitArgs[0], gitArgs[1:]...)
+	proc.Stdout = os.Stdout
+	proc.Stderr = os.Stderr
+	return proc.Run()
+}
+
+// ---- END UTILS ----
+
 func init() {
+	// push command
+	pushCmd := &cobra.Command{
+		Use:   "push",
+		Short: "Stage, commit, and push all changes with a single-line message",
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("Staging all changes...")
+			if err := runGitCommand([]string{"add", "."}); err != nil {
+				fmt.Println("git add failed:", err)
+				return
+			}
+			var msg string
+			if len(args) > 0 {
+				msg = strings.Join(args, " ")
+			} else {
+				fmt.Print("Enter a single-line commit message: ")
+				fmt.Scanln(&msg)
+			}
+			if msg == "" {
+				fmt.Println("Commit message required.")
+				return
+			}
+			fmt.Println("Committing...")
+			if err := runGitCommand([]string{"commit", "-m", msg}); err != nil {
+				fmt.Println("git commit failed:", err)
+				return
+			}
+			fmt.Println("Pushing to origin...")
+			if err := runGitCommand([]string{"push"}); err != nil {
+				fmt.Println("git push failed:", err)
+				return
+			}
+			fmt.Println("Push complete.")
+		},
+	}
+	rootCmd.AddCommand(pushCmd)
+
 	// Global flags
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "set loglevel to INFO")
 	rootCmd.PersistentFlags().BoolVarP(&veryVerbose, "very-verbose", "V", false, "set loglevel to DEBUG")
@@ -367,125 +418,7 @@ func init() {
 	suggestionCmd.Flags().BoolP("entire", "E", false, "Send entire file content for suggestion")
 	rootCmd.AddCommand(suggestionCmd)
 
-	// secret-ai
-	secretAICmd := &cobra.Command{
-		Use:   "secret-ai",
-		Short: "Secret AI SDK integration commands",
-	}
-	secretAICmd.AddCommand(&cobra.Command{
-		Use:   "list-models",
-		Short: "List available Secret AI models",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Listing Secret AI models (not implemented in Go yet).")
-		},
-	})
-	secretAICmd.AddCommand(&cobra.Command{
-		Use:   "test-connection",
-		Short: "Test Secret AI connection",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Testing Secret AI connection (not implemented in Go yet).")
-		},
-	})
-	secretAICmd.AddCommand(&cobra.Command{
-		Use:   "chat [message]",
-		Short: "Chat with Secret AI",
-		Args:  cobra.MinimumNArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("Chatting with Secret AI: %s (not implemented in Go yet).\n", strings.Join(args, " "))
-		},
-	})
-	rootCmd.AddCommand(secretAICmd)
-
-	// web3
-	web3Cmd := &cobra.Command{
-		Use:   "web3",
-		Short: "Web3 development commands",
-	}
-	web3Cmd.AddCommand(&cobra.Command{
-		Use:   "scaffold [project_name]",
-		Short: "Scaffold a new web3 project",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Scaffolding web3 project (not implemented in Go yet).")
-		},
-	})
-	web3Cmd.AddCommand(&cobra.Command{
-		Use:   "analyze-contract [contract_file]",
-		Short: "Analyze a smart contract",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Analyzing smart contract (not implemented in Go yet).")
-		},
-	})
-	web3Cmd.AddCommand(&cobra.Command{
-		Use:   "estimate-gas [contract_file]",
-		Short: "Estimate gas costs for a smart contract",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Estimating gas costs (not implemented in Go yet).")
-		},
-	})
-	web3Cmd.AddCommand(&cobra.Command{
-		Use:   "generate-tests [contract_file]",
-		Short: "Generate tests for a smart contract",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Generating tests (not implemented in Go yet).")
-		},
-	})
-	web3Cmd.AddCommand(&cobra.Command{
-		Use:   "check-env",
-		Short: "Check web3 development environment",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Checking web3 environment (not implemented in Go yet).")
-		},
-	})
-	web3Cmd.AddCommand(&cobra.Command{
-		Use:   "install-deps",
-		Short: "Install web3 dependencies",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Installing web3 dependencies (not implemented in Go yet).")
-		},
-	})
-	rootCmd.AddCommand(web3Cmd)
-
-	// zerepy
-	zerepyCmd := &cobra.Command{
-		Use:   "zerepy",
-		Short: "ZerePy integration commands",
-	}
-	zerepyCmd.AddCommand(&cobra.Command{
-		Use:   "status",
-		Short: "Check ZerePy server status",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Checking ZerePy server status (not implemented in Go yet).")
-		},
-	})
-	zerepyCmd.AddCommand(&cobra.Command{
-		Use:   "list-agents",
-		Short: "List available ZerePy agents",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Listing ZerePy agents (not implemented in Go yet).")
-		},
-	})
-	zerepyCmd.AddCommand(&cobra.Command{
-		Use:   "load-agent [agent_name]",
-		Short: "Load a ZerePy agent",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Loading ZerePy agent (not implemented in Go yet).")
-		},
-	})
-	zerepyCmd.AddCommand(&cobra.Command{
-		Use:   "action [connection] [action]",
-		Short: "Execute a ZerePy action",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Executing ZerePy action (not implemented in Go yet).")
-		},
-	})
-	zerepyCmd.AddCommand(&cobra.Command{
-		Use:   "chat [message]",
-		Short: "Chat with a ZerePy agent",
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("Chatting with ZerePy agent (not implemented in Go yet).")
-		},
-	})
-	rootCmd.AddCommand(zerepyCmd)
+	// secret-ai, web3, and zerepy commands are stubs and removed for now.
 
 	// solana
 	solanaCmd := &cobra.Command{
@@ -764,87 +697,7 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 	rootCmd.AddCommand(astroCmd)
 
 	// --- Enable/Disable Integration/Extension Commands ---
-
-	enableCmd := &cobra.Command{
-		Use:   "enable",
-		Short: "Enable an integration or extension",
-	}
-
-	disableCmd := &cobra.Command{
-		Use:   "disable",
-		Short: "Disable an integration or extension",
-	}
-
-	// Enable Integration
-	enableIntegrationCmd := &cobra.Command{
-		Use:   "integration [name]",
-		Short: "Enable an integration (e.g. ollama, githubmodels, openapi, githubcopilot)",
-		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			name := args[0]
-			cfg, _ := config.EnsureConfigPrompts("")
-			changed, err := setIntegrationEnabled(&cfg, name, true)
-			if err != nil {
-				fmt.Println("Error:", err)
-				return
-			}
-			if changed {
-				config.SaveConfig("", cfg)
-				fmt.Printf("Integration '%s' enabled.\n", name)
-			} else {
-				fmt.Printf("Integration '%s' was already enabled or not found.\n", name)
-			}
-		},
-	}
-	enableCmd.AddCommand(enableIntegrationCmd)
-
-	// Disable Integration
-	disableIntegrationCmd := &cobra.Command{
-		Use:   "integration [name]",
-		Short: "Disable an integration (e.g. ollama, githubmodels, openapi, githubcopilot)",
-		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			name := args[0]
-			cfg, _ := config.EnsureConfigPrompts("")
-			changed, err := setIntegrationEnabled(&cfg, name, false)
-			if err != nil {
-				fmt.Println("Error:", err)
-				return
-			}
-			if changed {
-				config.SaveConfig("", cfg)
-				fmt.Printf("Integration '%s' disabled.\n", name)
-			} else {
-				fmt.Printf("Integration '%s' was already disabled or not found.\n", name)
-			}
-		},
-	}
-	disableCmd.AddCommand(disableIntegrationCmd)
-
-	// Enable Extension (stub)
-	enableExtensionCmd := &cobra.Command{
-		Use:   "extension [name]",
-		Short: "Enable an extension (stub)",
-		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("Extension '%s' enabled (stub, not implemented).\n", args[0])
-		},
-	}
-	enableCmd.AddCommand(enableExtensionCmd)
-
-	// Disable Extension (stub)
-	disableExtensionCmd := &cobra.Command{
-		Use:   "extension [name]",
-		Short: "Disable an extension (stub)",
-		Args:  cobra.ExactArgs(1),
-		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("Extension '%s' disabled (stub, not implemented).\n", args[0])
-		},
-	}
-	disableCmd.AddCommand(disableExtensionCmd)
-
-	rootCmd.AddCommand(enableCmd)
-	rootCmd.AddCommand(disableCmd)
+	// Removed enable/disable extension commands and stubs (web3, zerepy, secret-ai) as they are not implemented or needed.
 
 	// Opencode integration
 	opencodeCmd := &cobra.Command{

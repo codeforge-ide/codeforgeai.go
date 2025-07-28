@@ -18,10 +18,10 @@ const defaultOllamaEndpoint = "http://localhost:11434/api/generate"
 
 // OllamaModel holds model name and endpoint.
 type OllamaModel struct {
+	modeliface.BaseAgent
 	Model    string
 	Endpoint string
 	Timeout  time.Duration
-	loggedIn bool
 }
 
 // Request/Response structs for Ollama API
@@ -49,10 +49,10 @@ func NewOllamaModel(model string, endpoint string, timeout time.Duration) *Ollam
 		timeout = 60 * time.Second
 	}
 	return &OllamaModel{
-		Model:    model,
-		Endpoint: endpoint,
-		Timeout:  timeout,
-		loggedIn: false,
+		Model:     model,
+		Endpoint:  endpoint,
+		Timeout:   timeout,
+		BaseAgent: modeliface.BaseAgent{NameStr: model},
 	}
 }
 
@@ -105,24 +105,4 @@ func (o *OllamaModel) SendRequest(prompt string, config interface{}) (string, er
 var _ modeliface.Model = (*OllamaModel)(nil)
 
 // --- Agent interface implementation ---
-func (o *OllamaModel) Name() string {
-	return "ollama"
-}
-
-func (o *OllamaModel) Login() error {
-	// For local Ollama, assume always available if endpoint is reachable
-	if o.Endpoint != "" {
-		o.loggedIn = true
-		return nil
-	}
-	return errors.New("missing Ollama endpoint")
-}
-
-func (o *OllamaModel) Logout() error {
-	o.loggedIn = false
-	return nil
-}
-
-func (o *OllamaModel) IsAuthenticated() bool {
-	return o.loggedIn
-}
+// Name, Login, Logout, IsAuthenticated are now provided by BaseAgent.

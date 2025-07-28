@@ -9,6 +9,6 @@ var copilotCmd = &cobra.Command{
 	Short: "GitHub Copilot integration commands",
 }
 
-func init() {
-	rootCmd.AddCommand(copilotCmd)
-}
+// func init() {
+// 	rootCmd.AddCommand(copilotCmd)
+// }

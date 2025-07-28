@@ -11,6 +11,8 @@ import (
 	"os/exec"
 	"strings"
 	"time"
+
+	"github.com/codeforge-ide/codeforgeai.go/modeliface"
 )
 
 const (
@@ -42,11 +44,11 @@ type ChatResponse struct {
 
 // Client for GitHub Models API.
 type Client struct {
+	modeliface.BaseAgent
 	Endpoint string
 	Model    string
 	Token    string
 	Timeout  time.Duration
-	loggedIn bool
 }
 
 // NewClient creates a new GitHub Models client.
@@ -63,11 +65,11 @@ func NewClient(token string, model string, endpoint string) *Client {
 	}
 	timeout := 60 * time.Second
 	return &Client{
-		Endpoint: endpoint,
-		Model:    model,
-		Token:    token,
-		Timeout:  timeout,
-		loggedIn: false,
+		Endpoint:  endpoint,
+		Model:     model,
+		Token:     token,
+		Timeout:   timeout,
+		BaseAgent: modeliface.BaseAgent{NameStr: "githubmodels"},
 	}
 }
 
@@ -223,23 +225,4 @@ func (c *Client) SendRequest(prompt string, config interface{}) (string, error) 
 }
 
 // --- Agent interface implementation ---
-func (c *Client) Name() string {
-	return "githubmodels"
-}
-
-func (c *Client) Login() error {
-	if c.Token != "" {
-		c.loggedIn = true
-		return nil
-	}
-	return errors.New("missing GitHub Models API token")
-}
-
-func (c *Client) Logout() error {
-	c.loggedIn = false
-	return nil
-}
-
-func (c *Client) IsAuthenticated() bool {
-	return c.loggedIn
-}
+// Name, Login, Logout, IsAuthenticated are now provided by BaseAgent.
