@@ -1,4 +1,5 @@
 {
+  // === Top-level model and prompt settings ===
   "general_model": "gemma3:1b",
   "general_prompt": "based on the below prompt and without returning anything else, restructure it so that it is strictly understandable to a coding ai agent with json output for file changes:",
   "code_model": "qwen2.5-coder:1.5b",
@@ -22,6 +23,27 @@
   "suggestion_prompt": "provide a helpful code suggestion for the following code context:",
   "extract_code_blocks_prompt": "extract all code blocks from the following text and return them in a structured format:",
   "format_code_prompt": "format the following code for better readability while preserving functionality:",
+
+  // === Integration tokens and endpoints (add your real values or leave blank) ===
+  // OpenAI integration (optional, required for OpenAI models)
+  "openai_api_key": "sk-...",
+
+  // Ollama integration (optional, required for local Ollama models)
+  "ollama_api_endpoint": "http://localhost:11434/api/generate", // Default endpoint
+  "ollama_model": "qwen2.5-coder:1.5b", // Default model name
+
+  // IO.net integration (optional, required for IO.net models)
+  "io_net_api_key": "your-io-net-api-key-here",
+
+  // GitHub Models integration (optional, required for GitHub Models)
+  "github_token": "ghp_...", // Personal access token for GitHub Models
+  "github_models_model": "your-model-name-here", // Model name for GitHub Models
+  "github_models_endpoint": "https://models.inference.ai.azure.com/chat/completions", // API endpoint for GitHub Models
+
+  // GitHub Copilot integration (optional, required for Copilot features)
+  "copilot_token": "your-copilot-token-here",
+
+  // === Integrations block (enable/disable integrations) ===
   "integrations": {
     "ollama": {
       "enabled": true
@@ -35,7 +57,12 @@
     "githubcopilot": {
       "enabled": false
     },
+    "io": {
+      "enabled": false
+    },
     "default": "ollama"
   },
+
+  // === Other settings ===
   "github_models_list": ""
 }
