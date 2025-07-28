@@ -1,48 +1,23 @@
 # AGENTS.md
 
-## Build, Lint, and Test Commands
+This repository is Go-based. Follow these guidelines for all agentic coding tasks:
 
-- **Build all platforms:**  
-  `./build.sh`
-- **Build (local):**  
-  `go build ./...`
-- **Run all tests:**  
-  `go test ./...`
-- **Run a single test file:**  
-  `go test ./path/to/file_test.go`
-- **Run a single test function:**  
-  `go test -run ^TestFuncName$ ./path/to/file_test.go`
-- **Lint (recommended):**  
-  `golangci-lint run`  
-  (Install: `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`)
-- **Format:**  
-  `gofmt -s -w .`  
-  or  
-  `goimports -w .`
+## Build, Lint, and Test
+- Build all platforms: `./build.sh`
+- Build (local): `go build ./...`
+- Run all tests: `go test ./...`
+- Run a single test file: `go test ./path/to/file_test.go`
+- Run a single test function: `go test -run ^TestFunc$ ./path/to/file_test.go`
+- Lint: `golangci-lint run` (install: `go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest`)
+- Format: `gofmt -s -w .` or `goimports -w .`
 
-## Code Style Guidelines
+## Code Style
+- Imports: Standard, third-party, local (use `goimports` to sort)
+- Naming: `CamelCase` for exports, `camelCase` for locals, interfaces end with `-er`, files use `snake_case.go`, tests: `*_test.go`
+- Error handling: Always check errors, return early, wrap with `fmt.Errorf("context: %w", err)`, prefer sentinel errors
+- Tests: Use `*_test.go`, table-driven tests, `t.Helper()` for helpers
+- Comments: All exports need doc comments; use `//nolint:<linter> // reason` for linter suppression
+- General: Avoid globals, keep functions focused, use context for cancellation/timeouts
 
-- **Imports:**  
-  - Standard, third-party, and local packages in separate blocks.
-  - Use `goimports` to auto-sort.
-- **Formatting:**  
-  - Always run `gofmt` or `goimports` before committing.
-- **Types & Naming:**  
-  - Use `CamelCase` for exported names, `camelCase` for locals.
-  - Interface names end with `-er` (e.g., `Reader`).
-  - File names: `snake_case.go`, test files: `*_test.go`.
-- **Error Handling:**  
-  - Always check errors; return early on error.
-  - Use `fmt.Errorf("context: %w", err)` for wrapping.
-  - Prefer sentinel errors over string matching.
-- **Tests:**  
-  - Place in `*_test.go` files.
-  - Use table-driven tests for variations.
-  - Use `t.Helper()` for helpers.
-- **Comments:**  
-  - Exported functions/types must have doc comments.
-  - Use `//nolint:<linter> // reason` to suppress linter warnings, with justification.
-- **General:**  
-  - Avoid global variables.
-  - Keep functions short and focused.
-  - Use context for cancellation/timeouts in long-running operations.
+notes:
+check the flow.md for further instructions a
