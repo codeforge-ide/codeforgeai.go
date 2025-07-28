@@ -10,6 +10,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/codeforge-ide/codeforgeai.go/config"
 	"github.com/codeforge-ide/codeforgeai.go/modeliface"
 	"github.com/spf13/cobra"
 )
@@ -39,7 +40,24 @@ type ollamaResponse struct {
 }
 
 // NewOllamaModel creates a new OllamaModel with optional endpoint and timeout.
-func NewOllamaModel(model string, endpoint string, timeout time.Duration) *OllamaModel {
+// NewOllamaModel creates a new OllamaModel with optional endpoint and timeout.
+// If model or endpoint are empty, tries config first, then env, then default.
+func NewOllamaModel(model string, endpoint string, timeout time.Duration, cfg *config.Config) *OllamaModel {
+	if model == "" && cfg != nil && cfg.OllamaModel != "" {
+		model = cfg.OllamaModel
+	}
+	if model == "" {
+		model = os.Getenv("OLLAMA_MODEL")
+		if model == "" && cfg != nil && cfg.CodeModel != "" {
+			model = cfg.CodeModel
+		}
+		if model == "" {
+			model = "qwen2.5-coder:1.5b"
+		}
+	}
+	if endpoint == "" && cfg != nil && cfg.OllamaEndpoint != "" {
+		endpoint = cfg.OllamaEndpoint
+	}
 	if endpoint == "" {
 		endpoint = os.Getenv("OLLAMA_API_ENDPOINT")
 		if endpoint == "" {
@@ -124,11 +142,15 @@ func ollamaRootCommand() *cobra.Command {
 		Short: "Send a prompt to Ollama",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
+			cfg, _ := config.LoadConfig("")
 			model := os.Getenv("OLLAMA_MODEL")
+			if model == "" && cfg.OllamaModel != "" {
+				model = cfg.OllamaModel
+			}
 			if model == "" {
 				model = "qwen2.5-coder:1.5b"
 			}
-			ollama := NewOllamaModel(model, "", 0)
+			ollama := NewOllamaModel(model, "", 0, &cfg)
 			resp, err := ollama.SendRequest(args[0], nil)
 			if err != nil {
 				fmt.Println("Error:", err)

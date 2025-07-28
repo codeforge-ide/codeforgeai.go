@@ -21,33 +21,42 @@ type IntegrationEntry struct {
 }
 
 type Config struct {
-	GeneralModel                  string             `json:"general_model"`
-	GeneralPrompt                 string             `json:"general_prompt"`
-	CodeModel                     string             `json:"code_model"`
-	CodePrompt                    string             `json:"code_prompt"`
-	GeneralModelGithub            string             `json:"general_model_github"`
-	CodeModelGithub               string             `json:"code_model_github"`
-	DirectoryClassificationPrompt string             `json:"directory_classification_prompt"`
-	Debug                         bool               `json:"debug"`
-	FormatLineSeparator           int                `json:"format_line_separator"`
-	GitmojiPrompt                 string             `json:"gitmoji_prompt"`
-	CommitMessagePrompt           string             `json:"commit_message_prompt"`
-	EditFinetunePrompt            string             `json:"edit_finetune_prompt"`
-	CodeOrCommand                 string             `json:"code_or_command"`
-	CommandAgentPrompt            string             `json:"command_agent_prompt"`
-	PromptFinetunePrompt          string             `json:"prompt_finetune_prompt"`
-	LanguageClassificationPrompt  string             `json:"language_classification_prompt"`
-	ReadmeSummaryPrompt           string             `json:"readme_summary_prompt"`
-	SpecificFileClassification    string             `json:"specific_file_classification"`
-	ImproveCodePrompt             string             `json:"improve_code_prompt"`
-	ExplainCodePrompt             string             `json:"explain_code_prompt"`
-	SuggestionPrompt              string             `json:"suggestion_prompt"`
-	ExtractCodeBlocksPrompt       string             `json:"extract_code_blocks_prompt"`
-	FormatCodePrompt              string             `json:"format_code_prompt"`
-	Integrations                  IntegrationsConfig `json:"integrations"`
-	GithubModelsList              string             `json:"github_models_list"`
-	CopilotToken                  string             `json:"copilot_token"`
-	OpenAIAPIKey                  string             `json:"openai_api_key"`
+	GeneralModel                  string `json:"general_model"`
+	GeneralPrompt                 string `json:"general_prompt"`
+	CodeModel                     string `json:"code_model"`
+	CodePrompt                    string `json:"code_prompt"`
+	GeneralModelGithub            string `json:"general_model_github"`
+	CodeModelGithub               string `json:"code_model_github"`
+	DirectoryClassificationPrompt string `json:"directory_classification_prompt"`
+	Debug                         bool   `json:"debug"`
+	FormatLineSeparator           int    `json:"format_line_separator"`
+	GitmojiPrompt                 string `json:"gitmoji_prompt"`
+	CommitMessagePrompt           string `json:"commit_message_prompt"`
+	EditFinetunePrompt            string `json:"edit_finetune_prompt"`
+	CodeOrCommand                 string `json:"code_or_command"`
+	CommandAgentPrompt            string `json:"command_agent_prompt"`
+	PromptFinetunePrompt          string `json:"prompt_finetune_prompt"`
+	LanguageClassificationPrompt  string `json:"language_classification_prompt"`
+	ReadmeSummaryPrompt           string `json:"readme_summary_prompt"`
+	SpecificFileClassification    string `json:"specific_file_classification"`
+	ImproveCodePrompt             string `json:"improve_code_prompt"`
+	ExplainCodePrompt             string `json:"explain_code_prompt"`
+	SuggestionPrompt              string `json:"suggestion_prompt"`
+	ExtractCodeBlocksPrompt       string `json:"extract_code_blocks_prompt"`
+	FormatCodePrompt              string `json:"format_code_prompt"`
+
+	// Integration config fields
+	OllamaModel          string `json:"ollama_model"`
+	OllamaEndpoint       string `json:"ollama_endpoint"`
+	GithubModelsModel    string `json:"github_models_model"`
+	GithubModelsEndpoint string `json:"github_models_endpoint"`
+	GithubToken          string `json:"github_token"`
+	IONetAPIKey          string `json:"io_net_api_key"`
+
+	Integrations     IntegrationsConfig `json:"integrations"`
+	GithubModelsList string             `json:"github_models_list"`
+	CopilotToken     string             `json:"copilot_token"`
+	OpenAIAPIKey     string             `json:"openai_api_key"`
 }
 
 // Set stores a key-value pair in the config file (only supports CopilotToken for now)
@@ -107,6 +116,14 @@ func DefaultConfig() Config {
 		SuggestionPrompt:              "provide a helpful code suggestion for the following code context:",
 		ExtractCodeBlocksPrompt:       "extract all code blocks from the following text and return them in a structured format:",
 		FormatCodePrompt:              "format the following code for better readability while preserving functionality:",
+
+		OllamaModel:          "qwen2.5-coder:1.5b",
+		OllamaEndpoint:       "http://localhost:11434/api/generate",
+		GithubModelsModel:    "gpt-4o-mini",
+		GithubModelsEndpoint: "https://models.inference.ai.azure.com/chat/completions",
+		GithubToken:          "",
+		IONetAPIKey:          "",
+
 		Integrations: IntegrationsConfig{
 			Ollama:        IntegrationEntry{Enabled: true},
 			GithubModels:  IntegrationEntry{Enabled: false},

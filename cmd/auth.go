@@ -111,7 +111,7 @@ var statusCmd = &cobra.Command{
 				}
 			}()},
 			{"Ollama", func() string {
-				if ollama.NewOllamaModel("", "", 0).IsAuthenticated() {
+				if ollama.NewOllamaModel("", "", 0, nil).IsAuthenticated() {
 					return "✅ Authenticated"
 				} else {
 					return "❌ Not Authenticated"

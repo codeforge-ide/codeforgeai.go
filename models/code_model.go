@@ -16,12 +16,12 @@ type CodeModel struct {
 func NewCodeModel(modelName string) modeliface.Model {
 	switch modelName {
 	case "ollama", "qwen2.5-coder:1.5b":
-		return ollama.NewOllamaModel(modelName, "", 0)
+		return ollama.NewOllamaModel(modelName, "", 0, nil)
 	// case "openai": return openai.NewOpenAIModel(modelName, ...)
 	// case "copilot": return copilot.NewCopilotModel(modelName, ...)
 	// Add more cases for other integrations as needed.
 	default:
-		return ollama.NewOllamaModel(modelName, "", 0)
+		return ollama.NewOllamaModel(modelName, "", 0, nil)
 	}
 }
 

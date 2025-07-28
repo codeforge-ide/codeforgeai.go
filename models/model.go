@@ -25,7 +25,7 @@ func GetModelFromConfig(cfg *config.Config, modelType string) (Model, error) {
 		if modelType == "code" {
 			modelName = cfg.CodeModel
 		}
-		return ollama.NewOllamaModel(modelName, "", 60*time.Second), nil
+		return ollama.NewOllamaModel(modelName, "", 60*time.Second, cfg), nil
 	case "githubmodels":
 		token := "" // You may want to load from env or config
 		modelName := cfg.GeneralModelGithub
