@@ -5,9 +5,9 @@ import (
 	"time"
 
 	"github.com/codeforge-ide/codeforgeai.go/config"
+	"github.com/codeforge-ide/codeforgeai.go/integrations/githubcopilot" // Copilot integration
 	"github.com/codeforge-ide/codeforgeai.go/integrations/githubmodels"
 	"github.com/codeforge-ide/codeforgeai.go/integrations/ollama"
-	// ...add other integrations as needed...
 )
 
 // Model interface for all models
@@ -20,21 +20,21 @@ func GetModelFromConfig(cfg *config.Config, modelType string) (Model, error) {
 	provider := cfg.Integrations.Default
 	switch provider {
 	case "ollama":
-		// Use Ollama model
 		modelName := cfg.GeneralModel
 		if modelType == "code" {
 			modelName = cfg.CodeModel
 		}
 		return ollama.NewOllamaModel(modelName, "", 60*time.Second, cfg), nil
 	case "githubmodels":
-		token := "" // You may want to load from env or config
+		token := ""
 		modelName := cfg.GeneralModelGithub
 		if modelType == "code" {
 			modelName = cfg.CodeModelGithub
 		}
 		client := githubmodels.NewClient(token, modelName, "")
 		return client, nil
-	// Add more providers here as needed
+	case "githubcopilot":
+		return &githubcopilot.CopilotModel{}, nil
 	default:
 		return nil, errors.New("unknown model provider: " + provider)
 	}
