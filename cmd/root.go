@@ -191,12 +191,24 @@ func init() {
 		Short: "Send a simple prompt to GitHub Models",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			token := os.Getenv("GITHUB_TOKEN")
+			cfg, _ := config.LoadConfig("")
+			token := cfg.GithubToken
 			if token == "" {
-				fmt.Println("GITHUB_TOKEN environment variable is required.")
+				token = os.Getenv("GITHUB_TOKEN")
+			}
+			if token == "" {
+				fmt.Println("GITHUB_TOKEN environment variable or config is required.")
 				return
 			}
-			client := githubmodels.NewClient(token, "", "")
+			model := cfg.GithubModelsModel
+			if model == "" {
+				model = os.Getenv("GITHUB_MODELS_MODEL")
+			}
+			endpoint := cfg.GithubModelsEndpoint
+			if endpoint == "" {
+				endpoint = os.Getenv("GITHUB_MODELS_ENDPOINT")
+			}
+			client := githubmodels.NewClient(token, model, endpoint)
 			resp, err := client.SimplePrompt(strings.Join(args, " "))
 			if err != nil {
 				fmt.Println("Error:", err)
@@ -212,10 +224,22 @@ func init() {
 		Use:   "multi-turn",
 		Short: "Send a multi-turn conversation to GitHub Models",
 		Run: func(cmd *cobra.Command, args []string) {
-			token := os.Getenv("GITHUB_TOKEN")
+			cfg, _ := config.LoadConfig("")
+			token := cfg.GithubToken
 			if token == "" {
-				fmt.Println("GITHUB_TOKEN environment variable is required.")
+				token = os.Getenv("GITHUB_TOKEN")
+			}
+			if token == "" {
+				fmt.Println("GITHUB_TOKEN environment variable or config is required.")
 				return
+			}
+			model := cfg.GithubModelsModel
+			if model == "" {
+				model = os.Getenv("GITHUB_MODELS_MODEL")
+			}
+			endpoint := cfg.GithubModelsEndpoint
+			if endpoint == "" {
+				endpoint = os.Getenv("GITHUB_MODELS_ENDPOINT")
 			}
 			// For demo, hardcode a conversation; in real use, parse from args or file
 			history := []githubmodels.Message{
@@ -224,7 +248,7 @@ func init() {
 				{Role: "assistant", Content: "The capital of France is Paris."},
 				{Role: "user", Content: "What about Spain?"},
 			}
-			client := githubmodels.NewClient(token, "", "")
+			client := githubmodels.NewClient(token, model, endpoint)
 			resp, err := client.MultiTurn(history)
 			if err != nil {
 				fmt.Println("Error:", err)
@@ -241,12 +265,24 @@ func init() {
 		Short: "Stream a prompt response from GitHub Models",
 		Args:  cobra.MinimumNArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
-			token := os.Getenv("GITHUB_TOKEN")
+			cfg, _ := config.LoadConfig("")
+			token := cfg.GithubToken
 			if token == "" {
-				fmt.Println("GITHUB_TOKEN environment variable is required.")
+				token = os.Getenv("GITHUB_TOKEN")
+			}
+			if token == "" {
+				fmt.Println("GITHUB_TOKEN environment variable or config is required.")
 				return
 			}
-			client := githubmodels.NewClient(token, "", "")
+			model := cfg.GithubModelsModel
+			if model == "" {
+				model = os.Getenv("GITHUB_MODELS_MODEL")
+			}
+			endpoint := cfg.GithubModelsEndpoint
+			if endpoint == "" {
+				endpoint = os.Getenv("GITHUB_MODELS_ENDPOINT")
+			}
+			client := githubmodels.NewClient(token, model, endpoint)
 			resp, err := client.StreamPrompt(strings.Join(args, " "))
 			if err != nil {
 				fmt.Println("Error:", err)
@@ -263,10 +299,22 @@ func init() {
 		Short: "Send an image prompt to GitHub Models",
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			token := os.Getenv("GITHUB_TOKEN")
+			cfg, _ := config.LoadConfig("")
+			token := cfg.GithubToken
 			if token == "" {
-				fmt.Println("GITHUB_TOKEN environment variable is required.")
+				token = os.Getenv("GITHUB_TOKEN")
+			}
+			if token == "" {
+				fmt.Println("GITHUB_TOKEN environment variable or config is required.")
 				return
+			}
+			model := cfg.GithubModelsModel
+			if model == "" {
+				model = os.Getenv("GITHUB_MODELS_MODEL")
+			}
+			endpoint := cfg.GithubModelsEndpoint
+			if endpoint == "" {
+				endpoint = os.Getenv("GITHUB_MODELS_ENDPOINT")
 			}
 			imagePath := args[1]
 			imageData, err := os.ReadFile(imagePath)
@@ -275,7 +323,7 @@ func init() {
 				return
 			}
 			imageB64 := encodeToBase64(imageData)
-			client := githubmodels.NewClient(token, "", "")
+			client := githubmodels.NewClient(token, model, endpoint)
 			resp, err := client.ImagePrompt(args[0], imageB64)
 			if err != nil {
 				fmt.Println("Error:", err)
@@ -722,9 +770,13 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 		Use:   "list-models",
 		Short: "List available IO.net models",
 		Run: func(cmd *cobra.Command, args []string) {
-			token := os.Getenv("IO_NET_API_KEY")
+			cfg, _ := config.LoadConfig("")
+			token := cfg.IONetAPIKey
 			if token == "" {
-				fmt.Println("IO_NET_API_KEY environment variable is required.")
+				token = os.Getenv("IO_NET_API_KEY")
+			}
+			if token == "" {
+				fmt.Println("IO_NET_API_KEY environment variable or config is required.")
 				return
 			}
 			client := io_integration.New(token)
@@ -744,9 +796,13 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 		Use:   "list-agents",
 		Short: "List available IO.net agents",
 		Run: func(cmd *cobra.Command, args []string) {
-			token := os.Getenv("IO_NET_API_KEY")
+			cfg, _ := config.LoadConfig("")
+			token := cfg.IONetAPIKey
 			if token == "" {
-				fmt.Println("IO_NET_API_KEY environment variable is required.")
+				token = os.Getenv("IO_NET_API_KEY")
+			}
+			if token == "" {
+				fmt.Println("IO_NET_API_KEY environment variable or config is required.")
 				return
 			}
 			client := io_integration.New(token)
@@ -767,9 +823,13 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 		Short: "Run an IO.net agent",
 		Args:  cobra.ExactArgs(2),
 		Run: func(cmd *cobra.Command, args []string) {
-			token := os.Getenv("IO_NET_API_KEY")
+			cfg, _ := config.LoadConfig("")
+			token := cfg.IONetAPIKey
 			if token == "" {
-				fmt.Println("IO_NET_API_KEY environment variable is required.")
+				token = os.Getenv("IO_NET_API_KEY")
+			}
+			if token == "" {
+				fmt.Println("IO_NET_API_KEY environment variable or config is required.")
 				return
 			}
 			client := io_integration.New(token)
