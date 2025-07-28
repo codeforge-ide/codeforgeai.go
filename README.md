@@ -1,4 +1,3 @@
-
 # 🚀 CodeForgeAI.go
 
 > **The Ultimate AI/MCP Powered Code Analysis & Automation Toolkit for Modern Developers**
@@ -6,6 +5,11 @@
 A blazingly fast, modular, and extensible AI-powered code analysis engine built in Go. Whether you're building the next DeFi protocol, contributing to open source, or shipping production applications, CodeForgeAI.go supercharges your development workflow with intelligent automation and real-time insights.
 
 ## 📦 Usage
+
+- **Build:** `go build ./...` (all platforms: `./build.sh`)
+- **Test:** `go test ./...` (single test: `go test -run TestFunctionName ./...`)
+- **Lint:** `go vet ./...` (format: `gofmt -s -w .`)
+- **Contribute:** See [AGENTS.md](./AGENTS.md) for agent and code style rules.
 
 Install the CLI tool with:
 
@@ -17,7 +21,7 @@ For full command line usage and examples, see [`USAGE.md`](./USAGE.md).
 
 ## 🔌 Integrations
 
-All integrations are now plug-and-play: each integration self-registers with a central registry at startup, and the CLI automatically discovers and wires up all available integrations. To add a new integration, simply implement the registration interface and provide a CLI command factory—no manual CLI wiring required.
+All integrations are plug-and-play: each integration self-registers with a central registry at startup, and the CLI auto-discovers and wires up all available integrations. To add a new integration, implement the registration interface and provide a CLI command factory—no manual CLI wiring required.
 
 ### 🌐 io.net Integration
 Connect to the IO Intelligence API for advanced agent workflows and model completions, supporting multi-agent orchestration, embeddings, and OpenAI-compatible endpoints. Use this for scalable, production-grade AI tasks with flexible model selection and quota management.
@@ -114,7 +118,10 @@ codeforgeai commit --stage-changes
 
 ## 🤝 Contributing
 
-Join the revolution! Whether you're building new MCP servers, adding LLM integrations, or improving the core engine, we welcome all contributors.
+- Follow [AGENTS.md](./AGENTS.md) for code style, commit, and agentic automation rules.
+- Run `go build ./...`, `go test ./...`, `go vet ./...`, and `gofmt -s -w .` before every commit.
+- All integrations must self-register and be auto-discovered by the CLI.
+- Update `README.md` and `USAGE.md` for new features or commands.
 
 **Special Recognition**: Originally inspired by the Python `codeforgeai` project, now evolved into a next-generation Go-native powerhouse.
 
