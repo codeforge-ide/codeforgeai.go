@@ -226,7 +226,11 @@ func (c *Client) SendRequest(prompt string, config interface{}) (string, error) 
 }
 
 // --- Agent interface implementation ---
-// Name, Login, Logout, IsAuthenticated are now provided by BaseAgent.
+// Name, Login, Logout are provided by BaseAgent.
+// IsAuthenticated checks if the GITHUB_TOKEN env var is set
+func (c *Client) IsAuthenticated() bool {
+	return os.Getenv("GITHUB_TOKEN") != ""
+}
 
 // --- Registry and CLI wiring ---
 

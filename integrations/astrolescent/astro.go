@@ -9,6 +9,11 @@ import (
 	astro "github.com/codeforge-ide/codeforgeai.go/mcp/astro"
 )
 
+// IsAuthenticated always returns true (no auth required for Astrolescent)
+func (d *DeFiAnalyzer) IsAuthenticated() bool {
+	return true
+}
+
 // DeFiAnalyzer provides AI-powered DeFi analysis using Astrolescent MCP data
 type DeFiAnalyzer struct {
 	mcpClient *astro.AstroMCP

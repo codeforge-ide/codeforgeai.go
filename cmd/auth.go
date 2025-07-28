@@ -3,8 +3,14 @@ package cmd
 import (
 	"fmt"
 	"github.com/codeforge-ide/codeforgeai.go/config"
+	"github.com/codeforge-ide/codeforgeai.go/integrations/astrolescent"
 	"github.com/codeforge-ide/codeforgeai.go/integrations/githubcopilot"
+	"github.com/codeforge-ide/codeforgeai.go/integrations/githubmodels"
+	"github.com/codeforge-ide/codeforgeai.go/integrations/io"
+	"github.com/codeforge-ide/codeforgeai.go/integrations/ollama"
+	"github.com/codeforge-ide/codeforgeai.go/integrations/openai"
 	"github.com/spf13/cobra"
+	"strings"
 	"time"
 )
 
@@ -75,9 +81,62 @@ var statusCmd = &cobra.Command{
 	Use:   "status",
 	Short: "Show authentication status for all providers",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("[stub] Showing authentication status for all providers")
-		// TODO: List all providers and their auth status
-	},
+		fmt.Printf("%-18s %-20s\n", "Provider", "Status")
+		fmt.Println(strings.Repeat("-", 38))
+
+		statuses := []struct {
+			Name   string
+			Status string
+		}{
+			{"Copilot", func() string {
+				c := &githubcopilot.CopilotModel{}
+				if c.IsAuthenticated() {
+					return "✅ Authenticated"
+				} else {
+					return "❌ Not Authenticated"
+				}
+			}()},
+			{"GitHub Models", func() string {
+				if githubmodels.NewClient("", "", "").IsAuthenticated() {
+					return "✅ Authenticated"
+				} else {
+					return "❌ Not Authenticated"
+				}
+			}()},
+			{"IO.net", func() string {
+				if io.New("").IsAuthenticated() {
+					return "✅ Authenticated"
+				} else {
+					return "❌ Not Authenticated"
+				}
+			}()},
+			{"Ollama", func() string {
+				if ollama.NewOllamaModel("", "", 0).IsAuthenticated() {
+					return "✅ Authenticated"
+				} else {
+					return "❌ Not Authenticated"
+				}
+			}()},
+			{"OpenAI", func() string {
+				if openai.NewOpenAIModel("").IsAuthenticated() {
+					return "✅ Authenticated"
+				} else {
+					return "❌ Not Authenticated"
+				}
+			}()},
+			{"Astrolescent", func() string {
+				if astrolescent.NewDeFiAnalyzer().IsAuthenticated() {
+					return "✅ Authenticated"
+				} else {
+					return "❌ Not Authenticated"
+				}
+			}()},
+		}
+
+		for _, s := range statuses {
+			fmt.Printf("%-18s %-20s\n", s.Name, s.Status)
+		}
+	}, // fixed syntax error
 }
 
 // switchCmd sets the active provider

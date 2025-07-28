@@ -1,8 +1,10 @@
 package openai
 
-import "github.com/codeforge-ide/codeforgeai.go/models"
-
-import "github.com/codeforge-ide/codeforgeai.go/modeliface"
+import (
+	"github.com/codeforge-ide/codeforgeai.go/modeliface"
+	"github.com/codeforge-ide/codeforgeai.go/models"
+	"os"
+)
 
 type OpenAIModel struct {
 	modeliface.BaseAgent
@@ -16,6 +18,11 @@ func (o *OpenAIModel) SendRequest(prompt string, config interface{}) (string, er
 
 var _ models.Model = (*OpenAIModel)(nil)
 var _ modeliface.Agent = (*OpenAIModel)(nil)
+
+// IsAuthenticated checks if the OPENAI_API_KEY env var is set
+func (o *OpenAIModel) IsAuthenticated() bool {
+	return os.Getenv("OPENAI_API_KEY") != ""
+}
 
 // NewOpenAIModel creates a new OpenAIModel with the given name.
 func NewOpenAIModel(name string) *OpenAIModel {

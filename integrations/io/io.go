@@ -3,6 +3,7 @@ package io
 import (
 	"context"
 	"github.com/codeforge-ide/codeforgeai.go/modeliface"
+	"os"
 )
 
 // IO represents the IO.net integration.
@@ -12,7 +13,11 @@ type IO struct {
 	apiKey string
 }
 
-// Name, Login, Logout, IsAuthenticated are now provided by BaseAgent.
+// Name, Login, Logout are provided by BaseAgent.
+// IsAuthenticated checks if the IO_NET_API_KEY env var is set
+func (i *IO) IsAuthenticated() bool {
+	return os.Getenv("IO_NET_API_KEY") != ""
+}
 
 // New returns a new IO.net integration.
 func New(apiKey string) *IO {

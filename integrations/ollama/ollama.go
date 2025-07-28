@@ -106,7 +106,11 @@ func (o *OllamaModel) SendRequest(prompt string, config interface{}) (string, er
 var _ modeliface.Model = (*OllamaModel)(nil)
 
 // --- Agent interface implementation ---
-// Name, Login, Logout, IsAuthenticated are now provided by BaseAgent.
+// Name, Login, Logout are provided by BaseAgent.
+// IsAuthenticated always returns true (no auth required for Ollama)
+func (o *OllamaModel) IsAuthenticated() bool {
+	return true
+}
 
 // --- Registry and CLI wiring ---
 
