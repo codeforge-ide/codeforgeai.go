@@ -1,6 +1,7 @@
 package openai
 
 import (
+	"github.com/codeforge-ide/codeforgeai.go/config"
 	"github.com/codeforge-ide/codeforgeai.go/modeliface"
 	"github.com/codeforge-ide/codeforgeai.go/models"
 	"os"
@@ -19,8 +20,14 @@ func (o *OpenAIModel) SendRequest(prompt string, config interface{}) (string, er
 var _ models.Model = (*OpenAIModel)(nil)
 var _ modeliface.Agent = (*OpenAIModel)(nil)
 
-// IsAuthenticated checks if the OPENAI_API_KEY env var is set
+// IsAuthenticated checks if the OpenAI API key is set in config or env
 func (o *OpenAIModel) IsAuthenticated() bool {
+	cfg, err := config.LoadConfig("")
+	if err == nil && cfg != (config.Config{}) {
+		if cfgKey := cfg.OpenAIAPIKey; cfgKey != "" {
+			return true
+		}
+	}
 	return os.Getenv("OPENAI_API_KEY") != ""
 }
 

@@ -47,6 +47,7 @@ type Config struct {
 	Integrations                  IntegrationsConfig `json:"integrations"`
 	GithubModelsList              string             `json:"github_models_list"`
 	CopilotToken                  string             `json:"copilot_token"`
+	OpenAIAPIKey                  string             `json:"openai_api_key"`
 }
 
 // Set stores a key-value pair in the config file (only supports CopilotToken for now)
