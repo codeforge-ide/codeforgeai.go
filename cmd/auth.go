@@ -2,7 +2,10 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/codeforge-ide/codeforgeai.go/config"
+	"github.com/codeforge-ide/codeforgeai.go/integrations/githubcopilot"
 	"github.com/spf13/cobra"
+	"time"
 )
 
 // authCmd is the root for all authentication-related commands
@@ -18,21 +21,53 @@ var loginCmd = &cobra.Command{
 	Args:  cobra.ExactArgs(1),
 	Run: func(cmd *cobra.Command, args []string) {
 		provider := args[0]
+		if provider == "copilot" {
+			copilotLogin()
+			return
+		}
 		fmt.Printf("[stub] Logging in to provider: %s\n", provider)
 		// TODO: Call provider-specific login logic via agent manager
 	},
 }
 
-// logoutCmd handles logout for a specified provider
-var logoutCmd = &cobra.Command{
-	Use:   "logout [provider]",
-	Short: "Logout from a provider",
-	Args:  cobra.ExactArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		provider := args[0]
-		fmt.Printf("[stub] Logging out from provider: %s\n", provider)
-		// TODO: Call provider-specific logout logic via agent manager
-	},
+// Copilot device flow authentication
+func copilotLogin() {
+	resp, err := githubcopilot.StartDeviceAuth()
+	if err != nil {
+		fmt.Printf("Error starting device auth: %v\n", err)
+		return
+	}
+	fmt.Printf("\nTo authenticate with GitHub Copilot, visit: %s\nAnd enter the code: %s\n\n", resp.VerificationURI, resp.UserCode)
+	fmt.Println("Waiting for authorization...")
+	interval := resp.Interval
+	expiry := time.Now().Add(time.Duration(resp.ExpiresIn) * time.Second)
+	for time.Now().Before(expiry) {
+		time.Sleep(time.Duration(interval) * time.Second)
+		tokenResp, err := githubcopilot.PollForAccessToken(resp.DeviceCode)
+		if err != nil {
+			fmt.Printf("Error polling for access token: %v\n", err)
+			return
+		}
+		if tokenResp.AccessToken != "" {
+			copilotToken, err := githubcopilot.GetCopilotToken(tokenResp.AccessToken)
+			if err != nil {
+				fmt.Printf("Error getting Copilot token: %v\n", err)
+				return
+			}
+			err = config.Set("copilot_token", copilotToken.Token)
+			if err != nil {
+				fmt.Printf("Error saving Copilot token: %v\n", err)
+				return
+			}
+			fmt.Println("\nGitHub Copilot authentication successful! Token saved.")
+			return
+		}
+		if tokenResp.Error != "authorization_pending" && tokenResp.Error != "" {
+			fmt.Printf("Authentication failed: %s\n", tokenResp.ErrorDescription)
+			return
+		}
+	}
+	fmt.Println("Device code expired. Please try again.")
 }
 
 // statusCmd shows authentication status for all providers
@@ -59,7 +94,6 @@ var switchCmd = &cobra.Command{
 
 func init() {
 	authCmd.AddCommand(loginCmd)
-	authCmd.AddCommand(logoutCmd)
 	authCmd.AddCommand(statusCmd)
 	authCmd.AddCommand(switchCmd)
 	rootCmd.AddCommand(authCmd)

@@ -10,4 +10,5 @@ func (o *OpenAIModel) SendRequest(prompt string, config interface{}) (string, er
 	// TODO: Implement OpenAI API call
 	return "", nil
 }
+
 var _ models.Model = (*OpenAIModel)(nil)

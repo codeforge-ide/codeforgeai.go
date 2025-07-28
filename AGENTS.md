@@ -20,4 +20,6 @@ This repository is Go-based. Follow these guidelines for all agentic coding task
 - General: Avoid globals, keep functions focused, use context for cancellation/timeouts
 
 notes:
-check the flow.md for further instructions a
+check the flow.md for further instructions 
+
+also be extra careful so has not to commit any build files or build outputs to github
