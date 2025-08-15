@@ -22,8 +22,8 @@ func StartCoinGeckoMCP(ctx context.Context, mode string, apiKey string, usePro b
 		if apiKey == "" {
 			return nil, errors.New("local mode requires apiKey (COINGECKO_PRO_API_KEY or COINGECKO_DEMO_API_KEY)")
 		}
-		// Ensure npx is present
-		if _, err := exec.LookPath("npx"); err != nil {
+			// Ensure npx is present (use lookPathFunc for test override)
+		if _, err := lookPathFunc("npx"); err != nil {
 			return nil, fmt.Errorf("npx not found in PATH: %w", err)
 		}
 		args := []string{"-y", "@coingecko/coingecko-mcp"}
@@ -44,8 +44,10 @@ func StartCoinGeckoMCP(ctx context.Context, mode string, apiKey string, usePro b
 	}
 }
 
+var lookPathFunc = exec.LookPath
+
 func buildRemoteCmd(url string) (*exec.Cmd, error) {
-	if _, err := exec.LookPath("npx"); err != nil {
+	if _, err := lookPathFunc("npx"); err != nil {
 		return nil, fmt.Errorf("npx not found in PATH: %w", err)
 	}
 	args := []string{"mcp-remote", url}
