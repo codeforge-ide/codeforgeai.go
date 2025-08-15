@@ -835,6 +835,66 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 
 	rootCmd.AddCommand(astroCmd)
 
+	// --- CoinGecko MCP Integration ---
+	coingeckoCmd := &cobra.Command{
+		Use:   "coingecko",
+		Short: "CoinGecko MCP server helpers",
+	}
+
+	coingeckoPrepare := &cobra.Command{
+		Use:   "prepare",
+		Short: "Print prepared CoinGecko MCP command (no side effects)",
+		Run: func(cmd *cobra.Command, args []string) {
+			mode, _ := cmd.Flags().GetString("mode")
+			apiKey, _ := cmd.Flags().GetString("api-key")
+			usePro, _ := cmd.Flags().GetBool("pro")
+			ctx := context.Background()
+			c, err := coingecko.StartCoinGeckoMCP(ctx, mode, apiKey, usePro)
+			if err != nil {
+				fmt.Println("Error preparing CoinGecko MCP:", err)
+				return
+			}
+			fmt.Println("prepared:", c.Args)
+		},
+	}
+	coingeckoPrepare.Flags().String("mode", "remote-keyless", "mode: remote-keyless|remote-byok|local")
+	coingeckoPrepare.Flags().String("api-key", "", "api key for local or BYOK usage")
+	coingeckoPrepare.Flags().Bool("pro", false, "use PRO environment for local mode")
+	coingeckoCmd.AddCommand(coingeckoPrepare)
+
+	coingeckoStart := &cobra.Command{
+		Use:   "start",
+		Short: "Start CoinGecko MCP process and supervise until SIGINT/SIGTERM",
+		Run: func(cmd *cobra.Command, args []string) {
+			mode, _ := cmd.Flags().GetString("mode")
+			apiKey, _ := cmd.Flags().GetString("api-key")
+			usePro, _ := cmd.Flags().GetBool("pro")
+			ctx := context.Background()
+			c, err := coingecko.StartCoinGeckoMCP(ctx, mode, apiKey, usePro)
+			if err != nil {
+				fmt.Println("Error starting CoinGecko MCP:", err)
+				return
+			}
+			fmt.Println("Starting CoinGecko MCP process... (press Ctrl+C to stop)")
+			if err := c.Start(); err != nil {
+				fmt.Println("Failed to start process:", err)
+				return
+			}
+			// Wait for signal
+			sigc := make(chan os.Signal, 1)
+			signal.Notify(sigc, syscall.SIGINT, syscall.SIGTERM)
+			<-sigc
+			fmt.Println("Shutting down CoinGecko MCP process...")
+			_ = c.Process.Kill()
+		},
+	}
+	coingeckoStart.Flags().String("mode", "remote-keyless", "mode: remote-keyless|remote-byok|local")
+	coingeckoStart.Flags().String("api-key", "", "api key for local or BYOK usage")
+	coingeckoStart.Flags().Bool("pro", false, "use PRO environment for local mode")
+	coingeckoCmd.AddCommand(coingeckoStart)
+
+	rootCmd.AddCommand(coingeckoCmd)
+
 	// --- Enable/Disable Integration/Extension Commands ---
 	// Removed enable/disable extension commands and stubs (web3, zerepy, secret-ai) as they are not implemented or needed.
 
