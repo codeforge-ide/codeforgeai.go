@@ -855,6 +855,17 @@ Example: codeforgeai astro trading-advice XRD ASTRL 100`,
 				return
 			}
 			fmt.Println("prepared:", c.Args)
+			// If local mode, also print injected env vars for clarity
+			if strings.HasPrefix(c.Args[len(c.Args)-1], "@coingecko/coingecko-mcp") || (len(c.Args) >= 2 && c.Args[1] == "@coingecko/coingecko-mcp") {
+				// Determine which env vars would be set (based on flags)
+				if apiKey != "" {
+					if usePro {
+						fmt.Println("env:", "COINGECKO_PRO_API_KEY=<redacted>", "COINGECKO_ENVIRONMENT=pro")
+					} else {
+						fmt.Println("env:", "COINGECKO_DEMO_API_KEY=<redacted>", "COINGECKO_ENVIRONMENT=demo")
+					}
+				}
+			}
 		},
 	}
 	coingeckoPrepare.Flags().String("mode", "remote-keyless", "mode: remote-keyless|remote-byok|local")
