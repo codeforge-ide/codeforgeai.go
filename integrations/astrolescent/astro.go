@@ -5,9 +5,35 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
-
-	astro "github.com/codeforge-ide/codeforgeai.go/mcp/astro"
 )
+
+// MCPResponse is a stub for MCP API responses
+type MCPResponse struct {
+	Text string
+	Raw  interface{}
+}
+
+// AstroMCP is a stub client for Astrolescent MCP
+type AstroMCP struct{}
+
+// NewAstroMCP returns a new AstroMCP client
+func NewAstroMCP() *AstroMCP {
+	return &AstroMCP{}
+}
+
+// Stub methods for DeFiAnalyzer usage
+func (a *AstroMCP) GetAPY(ctx context.Context) (*MCPResponse, error) {
+	return &MCPResponse{Text: "APY: 12.5%", Raw: map[string]interface{}{"staking_apy": 12.5}}, nil
+}
+func (a *AstroMCP) GetPrice(ctx context.Context, token string) (*MCPResponse, error) {
+	return &MCPResponse{Text: "ASTRL Price: $0.083", Raw: map[string]interface{}{"change_24h": 1.2}}, nil
+}
+func (a *AstroMCP) GetQuote(ctx context.Context, action, fromToken, toToken string, amount float64, extra string) (*MCPResponse, error) {
+	return &MCPResponse{Text: "Quote: 1000 ASTRL → 830 USD", Raw: nil}, nil
+}
+func (a *AstroMCP) GetBridge(ctx context.Context, fromChain, toChain, token string, amount float64) (*MCPResponse, error) {
+	return &MCPResponse{Text: "Bridge: 1000 ASTRL from chainA to chainB", Raw: nil}, nil
+}
 
 // IsAuthenticated always returns true (no auth required for Astrolescent)
 func (d *DeFiAnalyzer) IsAuthenticated() bool {
@@ -16,12 +42,12 @@ func (d *DeFiAnalyzer) IsAuthenticated() bool {
 
 // DeFiAnalyzer provides AI-powered DeFi analysis using Astrolescent MCP data
 type DeFiAnalyzer struct {
-	mcpClient *astro.AstroMCP
+	mcpClient *AstroMCP
 }
 
 func NewDeFiAnalyzer() *DeFiAnalyzer {
 	return &DeFiAnalyzer{
-		mcpClient: astro.NewAstroMCP(),
+		mcpClient: NewAstroMCP(),
 	}
 }
 
@@ -164,7 +190,7 @@ func (d *DeFiAnalyzer) AnalyzeBridgeOpportunity(ctx context.Context, fromChain, 
 
 // Helper methods
 
-func (d *DeFiAnalyzer) getMarketSentiment(price *astro.MCPResponse) string {
+func (d *DeFiAnalyzer) getMarketSentiment(price *MCPResponse) string {
 	if raw, ok := price.Raw.(map[string]interface{}); ok {
 		if change24h, ok := raw["change_24h"].(float64); ok {
 			switch {
@@ -182,7 +208,7 @@ func (d *DeFiAnalyzer) getMarketSentiment(price *astro.MCPResponse) string {
 	return "neutral"
 }
 
-func (d *DeFiAnalyzer) extractStakingAPY(apy *astro.MCPResponse) float64 {
+func (d *DeFiAnalyzer) extractStakingAPY(apy *MCPResponse) float64 {
 	if raw, ok := apy.Raw.(map[string]interface{}); ok {
 		if stakingAPY, ok := raw["staking_apy"].(float64); ok {
 			return stakingAPY
@@ -199,15 +225,15 @@ func (d *DeFiAnalyzer) calculateProjectedReturns(amount string, apy float64, day
 		dailyRate*100, projectedRewards, apy, days, (projectedRewards/amountFloat)*100, projectedRewards*0.083)
 }
 
-func (d *DeFiAnalyzer) generateTradingInsights(quote, price *astro.MCPResponse) string {
+func (d *DeFiAnalyzer) generateTradingInsights(quote, price *MCPResponse) string {
 	return "Market analysis based on current data"
 }
 
-func (d *DeFiAnalyzer) generateExecutionStrategy(amount string, quote *astro.MCPResponse) string {
+func (d *DeFiAnalyzer) generateExecutionStrategy(amount string, quote *MCPResponse) string {
 	return "Recommended execution approach"
 }
 
-func (d *DeFiAnalyzer) assessTradingRisk(quote, price *astro.MCPResponse) string {
+func (d *DeFiAnalyzer) assessTradingRisk(quote, price *MCPResponse) string {
 	return "Risk assessment completed"
 }
 

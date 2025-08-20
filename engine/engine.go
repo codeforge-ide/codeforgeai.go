@@ -3,7 +3,6 @@ package engine
 import (
 	"fmt"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"strings"
 
@@ -326,21 +325,6 @@ func (e *Engine) ProvideSuggestion(filePath string, line int, snippet []string, 
 		return ""
 	}
 	return resp
-}
-
-// GetGitDiff gets the current git diff.
-func (e *Engine) GetGitDiff() (string, error) {
-	cmd := exec.Command("git", "diff", "--cached")
-	output, err := cmd.Output()
-	if err != nil {
-		// Try unstaged diff if no staged changes
-		cmd = exec.Command("git", "diff")
-		output, err = cmd.Output()
-		if err != nil {
-			return "", fmt.Errorf("error getting git diff: %w", err)
-		}
-	}
-	return string(output), nil
 }
 
 // Helper functions
