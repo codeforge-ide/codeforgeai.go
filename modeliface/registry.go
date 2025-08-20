@@ -7,11 +7,12 @@ import (
 
 // IntegrationMetadata holds descriptive and config info for an integration.
 type IntegrationMetadata struct {
-	Name        string
-	Description string
-	ConfigKeys  []string
-	Secrets     []string
-	Commands    []string // e.g. "prompt", "list-models"
+	Name         string
+	Description  string
+	ConfigKeys   []string
+	Secrets      []string
+	Commands     []string // e.g. "prompt", "list-models"
+	Capabilities []string // e.g. "text_completion", "defi_price"
 }
 
 // IntegrationRegistration holds metadata and a CLI command factory.
